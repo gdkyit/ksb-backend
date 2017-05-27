@@ -48,16 +48,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .antMatchers("/**/*.js").permitAll()
          
          // 验证测试用api
-       // .antMatchers(HttpMethod.GET, "/api/auth/**").authenticated()
+        .antMatchers(HttpMethod.GET, "/api/auth/**").authenticated()
          
          //身份验证api允许匿名访问
-        // .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()            
+         .antMatchers(HttpMethod.POST,"/api/auth/**").permitAll()            
          
          // authenticate REST api 
-         //.antMatchers("/api/**").authenticated()
+         .antMatchers("/api/**").authenticated()
          
          //对外公开api允许匿名访问
-         //.antMatchers("/pub/api/**").permitAll()
+         .antMatchers("/pub/api/**").permitAll()
          
          // 其余连接允许匿名访问
          .anyRequest().permitAll().and()

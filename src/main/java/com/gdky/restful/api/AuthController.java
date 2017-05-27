@@ -1,4 +1,6 @@
 package com.gdky.restful.api;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +96,5 @@ public class AuthController {
 	public ResponseEntity<?> validateAuth() {
 		return ResponseEntity.ok("ok");
 	}
-	
-	
-	
 
 }
