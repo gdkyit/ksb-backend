@@ -1,4 +1,5 @@
 package com.gdky.restful.entity;
+
 import java.io.Serializable;
 
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -10,30 +11,6 @@ public class AuthResponse implements Serializable {
 	private static final long serialVersionUID = 2652559529529474758L;
 	private String token;
 	private String tokenhash;
-	private String jgId;
-	private String permission;
-	private Integer lo; //角色代码
-	//private List<AsideMenu> menu;
-	private String names;
-
-	public String getPermission() {
-		return permission;
-	}
-
-	public void setPermission(String permission) {
-		this.permission = permission;
-	}
-
-	public String getJgId() {
-		return jgId;
-	}
-
-	public void setJgId(Integer jgId) {
-		this.jgId = null;
-		if (jgId != null) {
-			this.jgId = HashIdUtil.encode(jgId.longValue());
-		}
-	}
 
 	public String getTokenhash() {
 		return tokenhash;
@@ -63,21 +40,4 @@ public class AuthResponse implements Serializable {
 		this.token = token;
 	}
 
-	public Integer getLo() {
-		return lo;
-	}
-
-	public void setLo(Integer lo) {
-		this.lo = lo;
-	}
-
-	
-
-	public String getNames() {
-		return names;
-	}
-
-	public void setNames(String names) {
-		this.names = names;
-	}
 }

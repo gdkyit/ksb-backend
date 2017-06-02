@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gdky.restful.config.Constants;
 
 @RestController
-@RequestMapping(value = Constants.URI_PUB_PREFIX)
+@RequestMapping(value = Constants.URI_API_PREFIX)
 public class TestController {
 
 	@Autowired

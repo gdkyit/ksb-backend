@@ -1,4 +1,4 @@
-package com.gdky.restful.api;
+package com.gdky.restful.security;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import com.gdky.restful.security.CustomUserDetailsService;
-import com.gdky.restful.security.Md5Utils;
 /**
  * Created by xin on 15/1/10.
  */

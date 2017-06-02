@@ -34,9 +34,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username)
 			throws UsernameNotFoundException {
 		User user = authService.getUser(username);
-		if (user == null){
-			user = authService.getUserByUname(username);
-		}
 		if (user == null) {
 			log.warn("用户不正确");
 			throw new UsernameNotFoundException("User not found");
@@ -54,10 +51,11 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 			// 注意：这里要ROLE_加上前缀，否则在创建角色而的时候统一加上
 			authorities
-					.add(new SimpleGrantedAuthority("ROLE_" + role.getName()));
+					.add(new SimpleGrantedAuthority("ROLE_" + role.getRoleName()));
 		}
 	    return authorities;
 	}
+	
 	
 	
 }

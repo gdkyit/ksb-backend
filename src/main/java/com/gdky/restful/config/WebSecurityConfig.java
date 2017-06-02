@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder;
-import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.gdky.restful.security.AuthenticationTokenFilter;
+import com.gdky.restful.security.CustomAuthenticationProvider;
 import com.gdky.restful.security.CustomUserDetailsService;
 import com.gdky.restful.security.EntryPointUnauthorizedHandler;
 
@@ -29,6 +30,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring()
+		// All of Spring Security will ignore the requests
+				.antMatchers("/resources/**").antMatchers(HttpMethod.POST, "/");
+	}
 	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -66,10 +73,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    	 auth.userDetailsService(userDetailsService).passwordEncoder(
-         		shaPasswordEncoder());
-    }
+	 @Override
+	 public void configure(AuthenticationManagerBuilder auth)
+	 throws Exception {
+
+	 auth.authenticationProvider(customAuthenticationProvider());
+	
+	 }
+    
+    @Bean
+	public CustomAuthenticationProvider customAuthenticationProvider() {
+		CustomAuthenticationProvider provider = new CustomAuthenticationProvider();
+		provider.setUserDetailsService(userDetailsService);
+		return provider;
+	}
 
     @Bean
     @Override
@@ -82,11 +99,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
       authenticationTokenFilter.setAuthenticationManager(authenticationManagerBean());
       return authenticationTokenFilter;
-    }
-
-    @Bean
-    public ShaPasswordEncoder shaPasswordEncoder() {
-        return new ShaPasswordEncoder();
     }
 
     @Bean

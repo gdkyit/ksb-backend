@@ -13,7 +13,7 @@ public class UserLogDao   {
 	
 	public Number addLog(User user, String ip,String time, String action) {
 		String sql = "insert into fw_user_log (user_id,ACCESS_IP,ACCESS_TIME,ACTION) values(?,?,?,?)";
-		return jdbcTemplate.update(sql, new Object[]{user.getId(),ip,time,action});	
+		return 1;//jdbcTemplate.update(sql, new Object[]{user.getId(),ip,time,action});	
 	}
 
 }

@@ -4,35 +4,115 @@ import java.io.Serializable;
 
 public class Role implements Serializable {
 
-	private static final long serialVersionUID = 6477197398963016786L;
-    private Integer id;
-    private String name;
-    private String description;
-    private String backtable;
-    
-	public String getDescription() {
-		return description;
+	/** serialVersionUID. */
+	private static final long serialVersionUID = 1L;
+
+	/** ID_. */
+	private Integer id_;
+
+	/** 角色名称. */
+	private String roleName;
+
+	/** 描述. */
+	private String ms;
+
+
+	/**
+	 * Constructor.
+	 */
+	public Role() {
 	}
-	public void setDescription(String description) {
-		this.description = description;
+
+	/**
+	 * Set the ID_.
+	 * 
+	 * @param id
+	 *            ID_
+	 */
+	public void setId_(Integer id_) {
+		this.id_ = id_;
 	}
-	public String getBacktable() {
-		return backtable;
+
+	/**
+	 * Get the ID_.
+	 * 
+	 * @return ID_
+	 */
+	public Integer getId_() {
+		return this.id_;
 	}
-	public void setBacktable(String backtable) {
-		this.backtable = backtable;
+
+	/**
+	 * Set the 角色名称.
+	 * 
+	 * @param roleName
+	 *            角色名称
+	 */
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
 	}
-	public Integer getId() {
-		return id;
+
+	/**
+	 * Get the 角色名称.
+	 * 
+	 * @return 角色名称
+	 */
+	public String getRoleName() {
+		return this.roleName;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+
+	/**
+	 * Set the 描述.
+	 * 
+	 * @param ms
+	 *            描述
+	 */
+	public void setMs(String ms) {
+		this.ms = ms;
 	}
-	public String getName() {
-		return name;
+
+	/**
+	 * Get the 描述.
+	 * 
+	 * @return 描述
+	 */
+	public String getMs() {
+		return this.ms;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}    
-    
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id_ == null) ? 0 : id_.hashCode());
+		return result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Role other = (Role) obj;
+		if (id_ == null) {
+			if (other.id_ != null) {
+				return false;
+			}
+		} else if (!id_.equals(other.id_)) {
+			return false;
+		}
+		return true;
+	}
 }

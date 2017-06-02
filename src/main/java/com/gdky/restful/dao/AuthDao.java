@@ -1,11 +1,11 @@
 package com.gdky.restful.dao;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,134 +14,49 @@ import com.gdky.restful.entity.User;
 
 @Repository
 @Transactional
-public class AuthDao   {
+public class AuthDao extends BaseJdbcDao {
 
-	@Autowired
-    protected JdbcTemplate jdbcTemplate;
-	
-	public List<User> getUser(String userName) {
-		String sql = "select * from fw_users where username = ?";
-		List<User> ls = this.jdbcTemplate.query(sql, new Object[] { userName },
-				new BeanPropertyRowMapper<User>(User.class));
-		return ls;
-	}
-
-	public List<User> getUserByUname(String uname) {
-		String sql = "select * from fw_users where uname = ?";
-		List<User> ls = this.jdbcTemplate.query(sql, new Object[] { uname },
-				new BeanPropertyRowMapper<User>(User.class));
-		return ls;
-	}
+ 
 
 	public List<Role> getRolesByUser(String userName) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(" select r.* from fw_users u, fw_user_role ur ,fw_role  r ");
-		sb.append(" where u.ID = ur.USER_ID ");
-		sb.append(" and ur.ROLE_ID = r.ID ");
-		sb.append(" and u.USERNAME =? ");
-		List<Role> ls = this.jdbcTemplate.query(sb.toString(),
-				new Object[] { userName }, new BeanPropertyRowMapper<Role>(
-						Role.class));
-		return ls;
+		return this.getUserRoles(userName);
 	}
 
-	public List<Role> getRoles() {
-		String sql = "select * from fw_role t order by t.id desc";
-		List<Role> ls = this.jdbcTemplate.query(sql,
-				new BeanPropertyRowMapper<Role>(Role.class));
-		return ls;
+	public List<Role> getUserRoles(String username) {
+		String sql ="select c.* from user a,user_role b,role c where a.id_=b.user_id and b.role_id=c.id_ and a.login_name=?";
+		return this.jdbcTemplate.query(sql, new Object[] { username },
+				new RoleRowMapper());
 	}
-
 	
-
-	public void delPrivileges(Integer roleId) {
-		String sql = "delete from fw_role_menu where role_id = ?";
-		this.jdbcTemplate.update(sql, new Object[] { roleId });
-
+	public User getUser(String username) {
+		String sql = " select * from user where login_name= ?";
+		List<User> users= this.jdbcTemplate.query(sql.toString(), new Object[] {username  },
+				new UserRowMapper());
+		return users.get(0);
 	}
-
-	public Number insertPrivileges(Integer roleId, List<String> privileges) {
-		int rs = 0;
-		if (privileges.size() > 0) {
-			List<Object[]> batchValue = new ArrayList<Object[]>();
-			for (String str : privileges) {
-				Object[] obj = new Object[] { roleId, str };
-				batchValue.add(obj);
-			}
-			String sql = "insert into fw_role_menu (role_id,menu_id) values (?,?)";
-			rs = this.jdbcTemplate.batchUpdate(sql, batchValue).length;
+	private class RoleRowMapper implements RowMapper<Role> {
+		public Role mapRow(final ResultSet rs, final int arg1) throws SQLException {
+			Role role = new Role();
+			role.setId_(rs.getInt("id_"));
+			role.setMs(rs.getString("ms"));
+			role.setRoleName(rs.getString("role_Name"));
+			return role;
 		}
-
-		return rs;
 	}
-
 	
-
-	public Number addRole(Map<String, Object> obj) {
-		String name = (String) obj.get("name");
-		String desc = (String) obj.get("description");
-		String sql = "insert into fw_role (name,description) values(?,?)";
-		return jdbcTemplate.update(sql, new Object[] { name, desc });
-
+	private class UserRowMapper implements RowMapper<User> {
+		public User mapRow(final ResultSet rs, final int arg1) throws SQLException {
+			User user = new User();
+			user.setId_(rs.getInt("id_"));
+			user.setLoginName(rs.getString("login_Name"));
+			user.setDeptid(rs.getInt("deptid"));
+			user.setPhone(rs.getString("phone"));
+			user.setRzsj(rs.getDate("rzsj"));
+			user.setPwd(rs.getString("pwd"));
+			user.setUserName(rs.getString("user_Name"));
+			user.setPhoto(rs.getString("photo"));
+			return user;
+		}
 	}
-
-	public Integer delRole(Integer roleId) {
-		String sql = "delete from fw_role where id = ?";
-		Integer rs = this.jdbcTemplate.update(sql, new Object[] { roleId });
-		return rs;
-
-	}
-
-	public void updateRole(Role role) {
-		String sql = "update fw_role set name=?,description=? where id=?";
-		this.jdbcTemplate.update(
-				sql,
-				new Object[] { role.getName(), role.getDescription(),
-						role.getId() });
-
-	}
-
 	
-
-	
-
-	public void addRoleUser(int role, Integer userId) {
-		String sql = "insert into fw_user_role (user_id,role_id) values(?,?)";
-		this.jdbcTemplate.update(sql, new Object[] { userId, role });
-
-	}
-
-	public void delRoleUser(Integer userId) {
-		String sql = "delete from fw_user_role where user_id =?";
-		this.jdbcTemplate.update(sql, new Object[] { userId });
-	}
-
-	public Integer delUsers(ArrayList<Object[]> batchValue) {
-		String sql = "delete from fw_users where id = ?";
-		int rs = this.jdbcTemplate.batchUpdate(sql, batchValue).length;
-		return rs;
-
-	}
-
-	
-	
-	public void resetPass(Integer userId, String password) {
-		StringBuffer sb = new StringBuffer();
-		sb.append(" update fw_users ");
-		sb.append(" set password=? ");
-		sb.append(" where id = ? ");
-		this.jdbcTemplate.update(
-				sb.toString(),
-				new Object[] {password,userId});
-	}
-
-
-	public void updatePass(String password1, Integer userId) {
-		String sql = "update fw_users set password = ? where id = ? ";
-		this.jdbcTemplate.update(sql,new Object[]{password1,userId});		
-	}
-
-	
-
-
 }

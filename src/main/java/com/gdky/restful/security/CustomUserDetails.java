@@ -26,38 +26,29 @@ public class CustomUserDetails extends User implements UserDetails {
         return this.authorities;
     }
 
-    @Override
+	@Override
     public boolean isAccountNonExpired() {
-    	if(this.getAccountExpired() == 1){
-    		return false;
-    	}
+    
     	return true;
         
     }
 
     @Override
     public boolean isAccountNonLocked() {
-    	if(this.getAccountLocked() == 1){
-    		return false;
-    	}
+  
     	return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-    	if(this.getCredentialsExpired() == 1){
-    		return false;
-    	}
+    
     	return true;
     }
 
     @Override
     public boolean isEnabled() {
-    	if(this.getAccountEnabled() == 0){
-    		return false;
-    	}
+   
     	return true;
     }
-
 
 }

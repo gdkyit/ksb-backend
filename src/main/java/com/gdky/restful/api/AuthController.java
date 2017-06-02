@@ -67,26 +67,16 @@ public class AuthController {
 	        authReq.getPassword()
 	      )
 	    );
-	    
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
 
 	    // Reload password post-authentication so we can generate token
 	    CustomUserDetails userDetails = (CustomUserDetails) this.userDetailsService.loadUserByUsername(authReq.getUsername());
-	    Role role = authService.getRolesByUser(userDetails.getUsername()).get(0);
-	    //List<AsideMenu> menu = accountService.getMenuByUser(userDetails.getId());
-	    String token = this.tokenUtils.generateToken(userDetails);
 	    
-	    //登记登录信息
-	    userLogService.addLog(userDetails, authService.getForWAddr(httpRequest), "用户登录");
+	    String token = this.tokenUtils.generateToken(userDetails);
+	   
 	    
 	    AuthResponse resp = new AuthResponse(token);
 	    resp.setTokenhash(token);
-	    resp.setJgId(userDetails.getJgId());
-	    //resp.setPermission(accountService.getPermissionByUser(userDetails));
-	    resp.setLo(role.getId());
-	  //  resp.setMenu(menu);
-	    resp.setNames(userDetails.getNames());
-	    
 
 	    // 返回 token与账户信息
 	    return ResponseEntity.ok(resp);

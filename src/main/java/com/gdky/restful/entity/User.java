@@ -1,135 +1,334 @@
 package com.gdky.restful.entity;
+
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 public class User implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4410761482155757494L;
-	private Integer id;
-	private String username;
-	private String password;
-	private String passwordHint;
-	private String names;
+	/** serialVersionUID. */
+	private static final long serialVersionUID = 1L;
+
+	/** ID_. */
+	private Integer id_;
+
+	/** 登陆名称. */
+	private String loginName;
+
+	/** 用户名称. */
+	private String userName;
+
+	/** 手机号码. */
+	private String phone;
+
+	/** 入职时间. */
+	private Date rzsj;
+
+	/** 职位. */
+	private String zw;
+
+	/** 密码. */
+	private String pwd;
+
+	/** 头像. */
+	private String photo;
+
+	/** 所在科室. */
+	private Integer deptid;
+
+	/** 生日. */
+	private Date birthday;
+
+	
 	private Integer accountEnabled;
 	private Integer accountExpired;
 	private Integer accountLocked;
 	private Integer credentialsExpired;
-	private Integer jgId;
-	private String uname;
-	private Timestamp createTime;
-	private String idcard;
-	private String phone;
-	private String email;
 	
-	
-	public String getIdcard() {
-		return idcard;
+	/**
+	 * Constructor.
+	 */
+	public User() {
 	}
-	public void setIdcard(String idcard) {
-		this.idcard = idcard;
+
+	/**
+	 * Set the ID_.
+	 * 
+	 * @param id
+	 *            ID_
+	 */
+	public void setId_(Integer id_) {
+		this.id_ = id_;
 	}
-	public String getPhone() {
-		return phone;
+
+	/**
+	 * Get the ID_.
+	 * 
+	 * @return ID_
+	 */
+	public Integer getId_() {
+		return this.id_;
 	}
+
+	/**
+	 * Set the 登陆名称.
+	 * 
+	 * @param login_Name
+	 *            登陆名称
+	 */
+	public void setLoginName(String loginName) {
+		this.loginName = loginName;
+	}
+
+	/**
+	 * Get the 登陆名称.
+	 * 
+	 * @return 登陆名称
+	 */
+	public String getLoginName() {
+		return this.loginName;
+	}
+
+	/**
+	 * Set the 用户名称.
+	 * 
+	 * @param user_Name
+	 *            用户名称
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	/**
+	 * Get the 用户名称.
+	 * 
+	 * @return 用户名称
+	 */
+	public String getUserName() {
+		return this.userName;
+	}
+
+	/**
+	 * Set the 手机号码.
+	 * 
+	 * @param phone
+	 *            手机号码
+	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	public Timestamp getCreateTime() {
-		return createTime;
+
+	/**
+	 * Get the 手机号码.
+	 * 
+	 * @return 手机号码
+	 */
+	public String getPhone() {
+		return this.phone;
 	}
-	public void setCreateTime(Timestamp createTime) {
-		this.createTime = createTime;
+
+	/**
+	 * Set the 入职时间.
+	 * 
+	 * @param rzsj
+	 *            入职时间
+	 */
+	public void setRzsj(Date rzsj) {
+		this.rzsj = rzsj;
 	}
-	public String getUname() {
-		return uname;
+
+	/**
+	 * Get the 入职时间.
+	 * 
+	 * @return 入职时间
+	 */
+	public Date getRzsj() {
+		return this.rzsj;
 	}
-	public void setUname(String uname) {
-		this.uname = uname;
+
+	/**
+	 * Set the 职位.
+	 * 
+	 * @param zw
+	 *            职位
+	 */
+	public void setZw(String zw) {
+		this.zw = zw;
 	}
-	public Integer getJgId() {
-		return jgId;
+
+	/**
+	 * Get the 职位.
+	 * 
+	 * @return 职位
+	 */
+	public String getZw() {
+		return this.zw;
 	}
-	public void setJgId(Integer jgId) {
-		this.jgId = jgId;
+
+	/**
+	 * Set the 密码.
+	 * 
+	 * @param pwd
+	 *            密码
+	 */
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
 	}
-	public Integer getId() {
-		return id;
+
+	/**
+	 * Get the 密码.
+	 * 
+	 * @return 密码
+	 */
+	public String getPwd() {
+		return this.pwd;
 	}
-	public void setId(Integer id) {
-		this.id = id;
+    public String getPassword(){
+    		return this.pwd;
+    }
+    public String getUsername(){
+		return this.loginName;
+}
+	/**
+	 * Set the 头像.
+	 * 
+	 * @param photo
+	 *            头像
+	 */
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
-	public String getUsername() {
-		return username;
+
+	/**
+	 * Get the 头像.
+	 * 
+	 * @return 头像
+	 */
+	public String getPhoto() {
+		return this.photo;
 	}
-	public void setUsername(String username) {
-		this.username = username;
+
+	/**
+	 * Set the 所在科室.
+	 * 
+	 * @param deptid
+	 *            所在科室
+	 */
+	public void setDeptid(Integer deptid) {
+		this.deptid = deptid;
 	}
-	public String getPassword() {
-		return password;
+
+	/**
+	 * Get the 所在科室.
+	 * 
+	 * @return 所在科室
+	 */
+	public Integer getDeptid() {
+		return this.deptid;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+
+	/**
+	 * Set the 生日.
+	 * 
+	 * @param birthday
+	 *            生日
+	 */
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
-	public String getPasswordHint() {
-		return passwordHint;
+
+	/**
+	 * Get the 生日.
+	 * 
+	 * @return 生日
+	 */
+	public Date getBirthday() {
+		return this.birthday;
 	}
-	public void setPasswordHint(String passwordHint) {
-		this.passwordHint = passwordHint;
-	}
+
+	
 	public Integer getAccountEnabled() {
 		return accountEnabled;
 	}
+
 	public void setAccountEnabled(Integer accountEnabled) {
 		this.accountEnabled = accountEnabled;
 	}
+
 	public Integer getAccountExpired() {
 		return accountExpired;
 	}
+
 	public void setAccountExpired(Integer accountExpired) {
 		this.accountExpired = accountExpired;
 	}
+
 	public Integer getAccountLocked() {
 		return accountLocked;
 	}
+
 	public void setAccountLocked(Integer accountLocked) {
 		this.accountLocked = accountLocked;
 	}
+
 	public Integer getCredentialsExpired() {
 		return credentialsExpired;
 	}
-	public void setCredentialsExpired(Integer credentialsExpired) {
-		this.credentialsExpired = credentialsExpired;
-	}
-	public String getNames() {
-		return names;
-	}
-	public void setNames(String name) {
-		this.names = name;
-	}
-	
-	public User(User u){
-		this.id = u.id;
-		this.username = u.username;
-		this.names = u.names;
-		this.password = u.password;
-		this.passwordHint = u.passwordHint;
+
+
+
+	public User(User u) {
+		
+		this.id_ = u.id_;
+		this.loginName = u.loginName;
+		this.userName = u.userName;
+		this.phone = u.phone;
+		this.rzsj = u.rzsj;
+		this.zw = u.zw;
+		this.pwd = u.pwd;
+		this.photo = u.photo;
+		this.deptid = u.deptid;
+		this.birthday = u.birthday;
 		this.accountEnabled = u.accountEnabled;
-		this.accountExpired =  u.accountExpired;
+		this.accountExpired = u.accountExpired;
 		this.accountLocked = u.accountLocked;
 		this.credentialsExpired = u.credentialsExpired;
-		this.jgId=u.jgId;
 	}
-	public User(){
-		
+
+	
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id_ == null) ? 0 : id_.hashCode());
+		return result;
 	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		User other = (User) obj;
+		if (id_ == null) {
+			if (other.id_ != null) {
+				return false;
+			}
+		} else if (!id_.equals(other.id_)) {
+			return false;
+		}
+		return true;
 	}
 	
 }
