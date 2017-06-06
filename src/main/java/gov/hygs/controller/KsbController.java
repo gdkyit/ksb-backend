@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.gdky.restful.config.Constants;
+import com.gdky.restful.entity.ResponseMessage;
 
 import gov.hygs.entity.ExamItem;
 import gov.hygs.entity.LoudRecord;
@@ -51,7 +53,7 @@ public class KsbController {
 
 	@ResponseBody
 	@RequestMapping(path = "/upload", method = RequestMethod.POST)
-	public String onSubmit(@RequestParam("file") MultipartFile file) throws IOException {
+	public ResponseEntity<?> onSubmit(@RequestParam("file") MultipartFile file) throws IOException {
 		if (null != file) {
 			// String path ="/Users/david/Documents/github/sxbapp";//
 			String path = "/usr/local/tomcat/app/images";
@@ -75,8 +77,8 @@ public class KsbController {
 			}
 			IOUtils.copy(file.getInputStream(), new FileOutputStream(storageFile));
 		}
+		return new ResponseEntity<>(ResponseMessage.success("upload OK"), HttpStatus.OK);
 
-		return "upload OK";
 	}
 
 	/**
@@ -99,7 +101,7 @@ public class KsbController {
 		result.put("rs", rs);
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		result.put("userTkfldy", this.tkxxService.getUserTkFLdy(userId));
-		return ResponseEntity.ok(result);
+		return new ResponseEntity<>(ResponseMessage.success(result), HttpStatus.OK);
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class KsbController {
 
 		List<Map<String, Object>> rs = null;
 		rs = this.tkxxService.getTktmByFlId(Integer.parseInt(parentId));
-		return ResponseEntity.ok(rs);
+		return new ResponseEntity<>(ResponseMessage.success(rs), HttpStatus.OK);
 	}
 
 	/**
@@ -123,8 +125,8 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/tkxzx", method = RequestMethod.GET)
-	public List<Map<String, Object>> getTkxzxByTkId(@RequestParam("tkId") String tkId) {
-		return this.tkxxService.getTkxzxByTkId(tkId);
+	public ResponseEntity<?> getTkxzxByTkId(@RequestParam("tkId") String tkId) {
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getTkxzxByTkId(tkId)), HttpStatus.OK);
 	}
 
 	/**
@@ -136,7 +138,7 @@ public class KsbController {
 	 */
 	@RequestMapping(value = "/checkDtxx", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckDtxx(@RequestBody ExamItem item) throws AuthenticationException {
-		return ResponseEntity.ok(this.tkxxService.doCheckDtxx(item));
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.doCheckDtxx(item)), HttpStatus.OK);
 	}
 
 	/**
@@ -152,7 +154,7 @@ public class KsbController {
 		this.tkxxService.insertLaudRecord(rec);
 		Map<String, String> param = new HashMap<String, String>();
 		param.put("rs", rs);
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -161,8 +163,8 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/exam", method = RequestMethod.GET)
-	public List<Map<String, Object>> getExam(@RequestParam("type") String type) {
-		return this.examService.getExam(type);
+	public ResponseEntity<?> getExam(@RequestParam("type") String type) {
+		return new ResponseEntity<>(ResponseMessage.success(type), HttpStatus.OK);
 	}
 
 	/**
@@ -172,14 +174,14 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/examDetail", method = RequestMethod.GET)
-	public Map<String, Object> getExamDetail(@RequestParam("examId") Integer examId) {
+	public ResponseEntity<?> getExamDetail(@RequestParam("examId") Integer examId) {
 		List<Map<String, Object>> ls = this.examService.getExamDetailByExamId(examId);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("examDetail", ls);
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		List<UserResult> urs = this.examService.getUserRs(examId, userId);
 		param.put("userRs", urs);
-		return param;
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 
 	}
 
@@ -192,7 +194,7 @@ public class KsbController {
 	 */
 	@RequestMapping(value = "/checkExamItem", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckExamItem(@RequestBody ExamItem item) throws AuthenticationException {
-		return ResponseEntity.ok(this.examService.doCheckExamItem(item));
+		return new ResponseEntity<>(ResponseMessage.success(this.examService.doCheckExamItem(item)), HttpStatus.OK);
 	}
 
 	/**
@@ -204,7 +206,7 @@ public class KsbController {
 	public ResponseEntity<?> checkUserPhoto(@RequestParam("loginName") String loginName) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("rs", this.examService.checkUserPhoto(loginName));
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -237,7 +239,7 @@ public class KsbController {
 			}
 		}
 		param.put("userGroupRank", ls);
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/persionInfo", method = RequestMethod.GET)
@@ -246,7 +248,7 @@ public class KsbController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userInfo", this.tkxxService.getUserByUserId(userId));
 		param.put("userScore", this.examService.getScoreGroupByFlId(userId));
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -260,7 +262,8 @@ public class KsbController {
 
 		// 积分排行榜
 		param.put("scoreRank", this.examService.getScoreRank());// 累计
-		return ResponseEntity.ok(param);
+
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -270,12 +273,14 @@ public class KsbController {
 	 */
 	@RequestMapping(value = "/dtphb", method = RequestMethod.GET)
 	public ResponseEntity<?> getDtphb() {
-		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		List<Map<String, Object>> userGroup = this.userGoupService.getUserGroup(userId);
+		// Integer userId = (Integer)
+		// this.tkxxService.getCurrentUser().get("ID_");
+		// List<Map<String, Object>> userGroup =
+		// this.userGoupService.getUserGroup(userId);
 		Map<String, List<Map<String, Object>>> param = new HashMap<String, List<Map<String, Object>>>();
 		// 答题学习排行榜
 		param.put("dtScoreRank", this.examService.getDtScoreRank());// 累计
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -291,7 +296,7 @@ public class KsbController {
 		param.put("qdScoreRank", this.examService.getExamScoreRank(examId));
 		param.put("userExamRank", this.examService.getUserExamScoreRank(examId, userId));
 
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	public void initUser() throws Exception {
@@ -313,7 +318,7 @@ public class KsbController {
 	 */
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentUser() {
-		return ResponseEntity.ok(this.tkxxService.getCurrentUser());
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getCurrentUser()), HttpStatus.OK);
 	}
 
 	/**
@@ -327,7 +332,7 @@ public class KsbController {
 		this.tkxxService.updateUser(user);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("rs", "ok");
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -341,7 +346,7 @@ public class KsbController {
 		this.tkxxService.updateUserPwd(user);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("rs", "ok");
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -352,7 +357,7 @@ public class KsbController {
 	@RequestMapping(value = "/userGroup", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserGroup() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return ResponseEntity.ok(this.userGoupService.getUserGroup(userId));
+		return new ResponseEntity<>(ResponseMessage.success(this.userGoupService.getUserGroup(userId)), HttpStatus.OK);
 	}
 
 	/**
@@ -367,7 +372,7 @@ public class KsbController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("groups", this.userGoupService.getGroups());
 		param.put("userGroups", this.userGoupService.getUserGroup(userId));
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -382,7 +387,7 @@ public class KsbController {
 		this.userGoupService.insertUserGroup(userGroups, userId);
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("rs", "ok");
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -399,7 +404,7 @@ public class KsbController {
 		}
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("rs", "ok");
-		return ResponseEntity.ok(param);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
 	/**
@@ -411,7 +416,8 @@ public class KsbController {
 	@RequestMapping(value = "/tkfl", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserTkfl(@RequestParam("parentId") String parentId) {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return ResponseEntity.ok(this.tkxxService.getUserTkfl(userId, parentId));
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserTkfl(userId, parentId)),
+				HttpStatus.OK);
 	}
 
 	/**
@@ -423,7 +429,7 @@ public class KsbController {
 	@RequestMapping(value = "/userLaud", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserLaud() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return ResponseEntity.ok(this.tkxxService.getUserLaud(userId));
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserLaud(userId)), HttpStatus.OK);
 	}
 
 	/**
@@ -435,7 +441,7 @@ public class KsbController {
 	@RequestMapping(value = "/examRecordList", method = RequestMethod.GET)
 	public ResponseEntity<?> getExamRecordList() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return ResponseEntity.ok(this.examService.getExamRecordList(userId));
+		return new ResponseEntity<>(ResponseMessage.success(this.examService.getExamRecordList(userId)), HttpStatus.OK);
 	}
 
 	/**
@@ -446,9 +452,10 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/examRecordDetail", method = RequestMethod.GET)
-	public List<Map<String, Object>> getExamRecordDetail(@RequestParam("examId") String examId) {
+	public ResponseEntity<?> getExamRecordDetail(@RequestParam("examId") String examId) {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return this.examService.getExamRecordDetail(userId, examId);
+		return new ResponseEntity<>(ResponseMessage.success(this.examService.getExamRecordDetail(userId, examId)),
+				HttpStatus.OK);
 	}
 
 	/**
@@ -460,7 +467,7 @@ public class KsbController {
 	@RequestMapping(value = "/dtxxRecordList", method = RequestMethod.GET)
 	public ResponseEntity<?> getDtxxRecordList() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return ResponseEntity.ok(this.tkxxService.getDtxxRecordList(userId));
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getDtxxRecordList(userId)), HttpStatus.OK);
 	}
 
 	/**
@@ -471,9 +478,10 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/dtxxRecordDetail", method = RequestMethod.GET)
-	public List<Map<String, Object>> getDtxxRecordDetail(@RequestParam("day") String day) {
+	public ResponseEntity<?> getDtxxRecordDetail(@RequestParam("day") String day) {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return this.tkxxService.getDtxxRecordDetail(userId, day);
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getDtxxRecordDetail(userId, day)),
+				HttpStatus.OK);
 	}
 
 	/**
@@ -485,21 +493,21 @@ public class KsbController {
 	 */
 
 	@RequestMapping(value = "/newTaskTm", method = RequestMethod.GET)
-	public List<Map<String, Object>> getNewTaskTm() {
+	public ResponseEntity<?> getNewTaskTm() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return this.tkxxService.getNewTaskTm(userId);
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getNewTaskTm(userId)), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/userZskTs", method = RequestMethod.GET)
-	public List<Map<String, Object>> getUserZskTs() {
+	public ResponseEntity<?> getUserZskTs() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return this.zskService.getZsk(userId);
+		return new ResponseEntity<>(ResponseMessage.success(this.zskService.getZsk(userId)), HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/userExam", method = RequestMethod.GET)
-	public List<Map<String, Object>> getUserExam() {
+	public ResponseEntity<?> getUserExam() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return this.examService.getUserExam(userId);
+		return new ResponseEntity<>(ResponseMessage.success(this.examService.getUserExam(userId)), HttpStatus.OK);
 	}
 
 	/**
@@ -509,7 +517,8 @@ public class KsbController {
 	 */
 	@RequestMapping(value = "/userScoreGroupByFlId", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserScoreGroupByFlId(@RequestParam("userId") Integer userId) {
-		return ResponseEntity.ok(this.examService.getScoreGroupByFlId(userId));
+		return new ResponseEntity<>(ResponseMessage.success(this.examService.getScoreGroupByFlId(userId)),
+				HttpStatus.OK);
 	}
 
 	/**
@@ -519,8 +528,8 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/userTmJiuChuo", method = RequestMethod.GET)
-	public List<Map<String, Object>> getUserTmjiuchuo() {
-		return this.tkxxService.getUserTmjiuchuo();
+	public ResponseEntity<?> getUserTmjiuchuo() {
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserTmjiuchuo()), HttpStatus.OK);
 	}
 
 	/**
@@ -529,8 +538,8 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/userGxz", method = RequestMethod.GET)
-	public Map<String, Object> getUserGxz() {
-		return this.tkxxService.getUserGxz();
+	public ResponseEntity<?> getUserGxz() {
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserGxz()), HttpStatus.OK);
 	}
 
 	/**
@@ -540,7 +549,7 @@ public class KsbController {
 	 * @return
 	 */
 	@RequestMapping(value = "/flpm", method = RequestMethod.GET)
-	public List<Map<String, Object>> getFlpm(@RequestParam("flId") String flId) {
-		return this.tkxxService.getFlpm(flId);
+	public ResponseEntity<?> getFlpm(@RequestParam("flId") String flId) {
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getFlpm(flId)), HttpStatus.OK);
 	}
 }
