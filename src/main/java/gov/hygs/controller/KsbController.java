@@ -39,7 +39,7 @@ import gov.hygs.service.ZskService;
 @RestController
 @RequestMapping(value = Constants.URI_API_PREFIX)
 public class KsbController {
-	
+
 	@Resource
 	private TkxxService tkxxService;
 	@Resource
@@ -48,8 +48,7 @@ public class KsbController {
 	private UserGoupService userGoupService;
 	@Resource
 	private ZskService zskService;
-	
-	
+
 	@ResponseBody
 	@RequestMapping(path = "/upload", method = RequestMethod.POST)
 	public String onSubmit(@RequestParam("file") MultipartFile file) throws IOException {
@@ -261,22 +260,6 @@ public class KsbController {
 
 		// 积分排行榜
 		param.put("scoreRank", this.examService.getScoreRank());// 累计
-		// Integer userId
-		// =(Integer)this.tkxxService.getCurrentUser().get("ID_");
-		// List<Map<String,Object>> userGroup
-		// =this.userGoupService.getUserGroup(userId);
-		// List<Map<String,Object>> ls = new ArrayList<Map<String,Object>>();
-		// if(null != userGroup){
-		// for(Map<String,Object> group:userGroup){
-		// Map<String,Object> param1 = new HashMap<String,Object>();
-		// Integer groupId = (Integer)group.get("ID_");
-		// param1.put("group", group);
-		// param1.put("scoreRank", this.examService.getScoreRank(groupId));//累计
-
-		// ls.add(param1);
-		// }
-		// }
-		// param.put("userGroupRank", ls);
 		return ResponseEntity.ok(param);
 	}
 
@@ -292,27 +275,6 @@ public class KsbController {
 		Map<String, List<Map<String, Object>>> param = new HashMap<String, List<Map<String, Object>>>();
 		// 答题学习排行榜
 		param.put("dtScoreRank", this.examService.getDtScoreRank());// 累计
-
-		// List<Map<String,Object>> ls = new ArrayList<Map<String,Object>>();
-		// if(null != userGroup){
-		// for(Map<String,Object> group:userGroup){
-		// Map<String,Object> param1 = new HashMap<String,Object>();
-		// Integer groupId = (Integer)group.get("ID_");
-		// param1.put("group", group);
-		// param1.put("dtScoreRank",
-		// this.examService.getDtScoreRank(groupId));//累计
-		// param1.put("dtScoreRankByMonth",
-		// this.examService.getDtScoreRankByMonth(groupId));//本月
-		// param1.put("dtScoreRankByQuarter",
-		// this.examService.getDtScoreRankByQuarter(groupId));//本季度
-		// param1.put("dtScoreRankByWeek",
-		// this.examService.getDtScoreRankByWeek(groupId));//本周
-		// param1.put("dtScoreRankByYear",
-		// this.examService.getDtScoreRankByYear(groupId));//本年
-		// ls.add(param1);
-		// }
-		// }
-		// param.put("userGroupRank", ls);
 		return ResponseEntity.ok(param);
 	}
 
