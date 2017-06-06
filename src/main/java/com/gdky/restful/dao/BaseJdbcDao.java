@@ -18,15 +18,17 @@ import org.springframework.jdbc.support.KeyHolder;
 
 public class BaseJdbcDao {
 
-	protected JdbcTemplate jdbcTemplate;
-	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	@Autowired
+    protected JdbcTemplate jdbcTemplate;
+	
+	/*protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(
 				dataSource);
-	}
+	}*/
 
 	/**
 	 * 插入一条记录并返回主键ID
