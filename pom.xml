@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.gdky</groupId>
-	<artifactId>ksb-backend</artifactId>
+	<artifactId>kxb-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>ksb-backend</name>
+	<name>kxb-backend</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -88,7 +88,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>ksbbackend</finalName>
+		<finalName>kxbbackend</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
