@@ -34,7 +34,7 @@ public class AuthenticationTokenFilter extends
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String authToken = httpRequest.getHeader(this.tokenHeader);
 		String username = this.tokenUtils.getUsernameFromToken(authToken);
-
+		
 		if (username != null
 				&& SecurityContextHolder.getContext().getAuthentication() == null) {
 			CustomUserDetails userDetails = (CustomUserDetails)this.userDetailsService

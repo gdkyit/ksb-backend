@@ -4,6 +4,7 @@ package com.gdky.restful.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gdky.restful.entity.Role;
 import com.gdky.restful.entity.User;
+import com.gdky.restful.security.CustomUserDetails;
 
 @Repository
 @Transactional
@@ -55,8 +57,16 @@ public class AuthDao extends BaseJdbcDao {
 			user.setPwd(rs.getString("pwd"));
 			user.setUserName(rs.getString("user_Name"));
 			user.setPhoto(rs.getString("photo"));
+			user.setDlxx(rs.getString("dlxx"));
 			return user;
 		}
 	}
 	
+
+	public void insertDlxx(String random ,CustomUserDetails userDetails) {
+		// TODO Auto-generated method stub
+		String sql = "update user set dlxx = ? where id_ = ? ";
+		this.jdbcTemplate.update(sql,new Object[]{random,userDetails.getId_()});
+	}   
+
 }

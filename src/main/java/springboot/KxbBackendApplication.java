@@ -6,9 +6,9 @@ import org.springframework.context.annotation.ComponentScan;
 
 @ComponentScan(basePackages={"com.gdky.restful","gov.hygs"})
 @SpringBootApplication
-public class KsbBackendApplication {
+public class KxbBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(KsbBackendApplication.class, args);
+		SpringApplication.run(KxbBackendApplication.class, args);
 	}
 }

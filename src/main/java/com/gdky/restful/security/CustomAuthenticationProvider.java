@@ -53,7 +53,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		//与authentication里面的credentials相比较
 		
 		if(!password.equals(Md5Utils.encodeMd5((String)token.getCredentials()))) {
-			throw new BadCredentialsException("Invalid username/password");
+			throw new BadCredentialsException("账户或密码错误！");
 		}
 		//授权
 		return new UsernamePasswordAuthenticationToken(userDetails, password,userDetails.getAuthorities());

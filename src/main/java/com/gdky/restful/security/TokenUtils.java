@@ -52,6 +52,18 @@ public class TokenUtils {
 		return password;
 	}
 	
+	public String getDlxxFromToken(String token) {
+		String dlxx;
+		try {
+			final Claims claims = this.getClaimsFromToken(token);
+			dlxx = (String) claims.get("dlxx");
+		} catch (Exception e) {
+			dlxx = null;
+		}
+		return dlxx;
+	}
+	
+	
 	public Integer getUserIdFromToken(String token) {
 		Integer userId ;
 		try {
@@ -125,11 +137,12 @@ public class TokenUtils {
 		return (lastPasswordReset != null && created.before(lastPasswordReset));
 	}
 
-	public String generateToken(CustomUserDetails userDetails) {
+	public String generateToken(CustomUserDetails userDetails,String random) {
 		Map<String, Object> claims = new HashMap<String, Object>();
 		claims.put("sub", userDetails.getUsername());
 		claims.put("created", this.generateCurrentDate());
 		claims.put("password", userDetails.getPassword());
+		claims.put("dlxx", random);
 		return this.generateToken(claims);
 	}
 
@@ -161,8 +174,14 @@ public class TokenUtils {
 		CustomUserDetails user = (CustomUserDetails) userDetails;
 		final String username = this.getUsernameFromToken(token);
 		final String password = this.getPasswordFromToken(token);
-		return (username.equals(user.getUsername())
+		final String dlxx = this.getDlxxFromToken(token);
+		if(user.getDlxx()==null||dlxx==null){
+			return false;
+		}else{
+			return (username.equals(user.getUsername())
 				&& !(this.isTokenExpired(token)) && password.equals(user
-				.getPassword()));
+				.getPassword()) && dlxx.equals(user.getDlxx()));
+		}
+		
 	}
 }

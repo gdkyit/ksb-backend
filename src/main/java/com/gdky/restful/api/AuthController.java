@@ -1,5 +1,6 @@
 package com.gdky.restful.api;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -67,12 +68,16 @@ public class AuthController {
 	        authReq.getPassword()
 	      )
 	    );
+	   
 	    SecurityContextHolder.getContext().setAuthentication(authentication);
 
 	    // Reload password post-authentication so we can generate token
 	    CustomUserDetails userDetails = (CustomUserDetails) this.userDetailsService.loadUserByUsername(authReq.getUsername());
 	    
-	    String token = this.tokenUtils.generateToken(userDetails);
+	    String random = getRandomString(10);
+	    authService.insertDlxx(random,userDetails);
+	    
+	    String token = this.tokenUtils.generateToken(userDetails,random);
 	   
 	    
 	    AuthResponse resp = new AuthResponse(token);
@@ -86,5 +91,16 @@ public class AuthController {
 	public ResponseEntity<?> validateAuth() {
 		return ResponseEntity.ok("ok");
 	}
+
+	public String getRandomString(int length) { //length表示生成字符串的长度
+	    String base = "abcdefghijklmnopqrstuvwxyz0123456789";   
+	    Random random = new Random();   
+	    StringBuffer sb = new StringBuffer();   
+	    for (int i = 0; i < length; i++) {   
+	        int number = random.nextInt(base.length());   
+	        sb.append(base.charAt(number));   
+	    }   
+	    return sb.toString();   
+	 }
 
 }

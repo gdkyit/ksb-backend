@@ -37,6 +37,7 @@ public class User implements Serializable {
 	/** 生日. */
 	private Date birthday;
 
+	private String dlxx;
 	
 	private Integer accountEnabled;
 	private Integer accountExpired;
@@ -275,6 +276,14 @@ public class User implements Serializable {
 
 
 
+	public String getDlxx() {
+		return dlxx;
+	}
+
+	public void setDlxx(String dlxx) {
+		this.dlxx = dlxx;
+	}
+
 	public User(User u) {
 		
 		this.id_ = u.id_;
@@ -287,6 +296,7 @@ public class User implements Serializable {
 		this.photo = u.photo;
 		this.deptid = u.deptid;
 		this.birthday = u.birthday;
+		this.dlxx = u.dlxx;
 		this.accountEnabled = u.accountEnabled;
 		this.accountExpired = u.accountExpired;
 		this.accountLocked = u.accountLocked;
