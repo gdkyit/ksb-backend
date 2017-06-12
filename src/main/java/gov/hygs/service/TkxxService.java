@@ -20,6 +20,7 @@ import org.apache.poi.ss.util.NumberToTextConverter;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.gdky.restful.security.Md5Utils;
@@ -463,4 +464,10 @@ public class TkxxService {
 	public List<Map<String,Object>> getFlpm(String flId){
 		return this.tkxxDao.getFlpm(flId);
 	}
+
+	public Object test() {
+		// TODO Auto-generated method stub
+		return tkxxDao.test();
+	}
+	
 }

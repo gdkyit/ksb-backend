@@ -15,14 +15,19 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.PlatformTransactionManager;
 
 public class BaseJdbcDao {
 
 	@Autowired
     protected JdbcTemplate jdbcTemplate;
-	
-	/*protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
+	@Autowired
+	protected DataSource dataSource;
+	@Autowired
+	protected NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+	@Autowired
+	protected PlatformTransactionManager transationManager;
+	/*
 	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);

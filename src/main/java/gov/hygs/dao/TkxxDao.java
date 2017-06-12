@@ -288,4 +288,11 @@ public class TkxxDao extends BaseJdbcDao {
 			sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id order by rank  limit "+jfpms+" ");
 			return this.jdbcTemplate.queryForList(sb.toString(), new Object[]{flId});
 		}
+		public Object test() {
+			// TODO Auto-generated method stub
+			dataSource.toString();
+			transationManager.toString();
+			namedParameterJdbcTemplate.hashCode();
+			return null;
+		}
 }

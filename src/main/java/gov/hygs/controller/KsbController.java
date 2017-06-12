@@ -164,7 +164,7 @@ public class KsbController {
 	 */
 	@RequestMapping(value = "/exam", method = RequestMethod.GET)
 	public ResponseEntity<?> getExam(@RequestParam("type") String type) {
-		return new ResponseEntity<>(ResponseMessage.success(type), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success(this.examService.getExam(type)), HttpStatus.OK);
 	}
 
 	/**
@@ -552,4 +552,10 @@ public class KsbController {
 	public ResponseEntity<?> getFlpm(@RequestParam("flId") String flId) {
 		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getFlpm(flId)), HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ResponseEntity<?> test() {
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.test()), HttpStatus.OK);
+	}
+
 }
