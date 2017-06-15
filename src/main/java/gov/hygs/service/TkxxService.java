@@ -379,14 +379,10 @@ public class TkxxService {
 		}
 	}
 
-	public List<Map<String, Object>> getUserTkfl(Integer userId, String parentId) {
+	public List<Map<String, Object>> getUserTkfl(Integer userId) {
 		List<Map<String, Object>> ls = this.tkxxDao.getUserFl(userId);
 		if (ls.size() == 0) {
-			if (StringUtils.isEmpty(parentId)) {
-				ls = this.getTopTmfl();
-			} else {
-				ls = this.getTmfl(Integer.parseInt(parentId));
-			}
+			ls = this.getTopTmfl();
 		}
 		return ls;
 	}

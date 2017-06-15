@@ -82,6 +82,63 @@ public class KsbController {
 	}
 
 	/**
+	 * 积分榜个人秀
+	 * @return
+	 */
+	@RequestMapping(value = "/grx", method = RequestMethod.GET)
+	public ResponseEntity<?> getGrx() { 
+		Map<String, Object> param = new HashMap<String, Object>();
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
+		List<Map<String, Object>> ls = new ArrayList<Map<String, Object>>();
+		List<Map<String, Object>> userGroup = this.userGoupService.getUserGroup(userId);
+		if (null != userGroup) {
+			for (Map<String, Object> group : userGroup) {
+				Map<String, Object> param1 = new HashMap<String, Object>();
+				Integer groupId = (Integer) group.get("ID_");
+				String isDefault =  (String) group.get("is_default");
+				if(isDefault.equals("Y")){
+					param1.put("group", group);
+				//	param1.put("scoreRank", this.examService.getScoreRank(groupId));// 累计
+					param1.put("userScoreRank", this.examService.getUserGroupScoreRank(groupId, userId));
+					ls.add(param1);
+				}
+			}
+		}
+		param.put("totalUserResult", this.tkxxService.getTotalUserResultByUserId(userId));
+		param.put("userGroupRank", ls);
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/jfb", method = RequestMethod.GET)
+	public ResponseEntity<?> getJfb() { 
+		Map<String, Object> param = new HashMap<String, Object>();
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
+		List<Map<String, Object>> userGroup = this.userGoupService.getUserGroup(userId);
+		if (null != userGroup) {
+			for (Map<String, Object> group : userGroup) {
+				Integer groupId = (Integer) group.get("ID_");
+				String isDefault =  (String) group.get("is_default");
+				if(isDefault.equals("Y")){
+					param.put("group", group);
+					param.put("scoreRank", this.examService.getScoreRank(groupId));// 累计
+					param.put("userScoreRank", this.examService.getUserGroupScoreRank(groupId, userId));
+				}
+			}
+		}
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/qzb", method = RequestMethod.GET)
+	public ResponseEntity<?> getJfbByQz(@RequestParam("groupId") Integer groupId) {
+		Map<String, Object> param = new HashMap<String, Object>();
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
+		param.put("scoreRank", this.examService.getScoreRank(groupId));// 累计
+		param.put("userScoreRank", this.examService.getUserGroupScoreRank(groupId, userId));	
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+	}
+
+	
+	/**
 	 * 题目分类订阅
 	 * 
 	 * @param parentId
@@ -408,15 +465,15 @@ public class KsbController {
 	}
 
 	/**
-	 * 题目分类
+	 * 用户订阅题目分类
 	 * 
 	 * @param parentId
 	 * @return
 	 */
 	@RequestMapping(value = "/tkfl", method = RequestMethod.GET)
-	public ResponseEntity<?> getUserTkfl(@RequestParam("parentId") String parentId) {
+	public ResponseEntity<?> getUserTkfl() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserTkfl(userId, parentId)),
+		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserTkfl(userId)),
 				HttpStatus.OK);
 	}
 

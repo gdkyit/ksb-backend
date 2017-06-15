@@ -12,7 +12,7 @@ import gov.hygs.entity.UserGroup;
 public class UserGroupDao extends BaseJdbcDao {
 
 	public List<Map<String,Object>> getUserGroup(Integer userId){
-		String sql ="select gt.* from user_group as ug,grouptable as gt where gt.id_ = ug.group_id and ug.USER_ID= ?";
+		String sql ="select gt.*,ug.is_default from user_group as ug,grouptable as gt where gt.id_ = ug.group_id and ug.USER_ID= ?";
 		return this.jdbcTemplate.queryForList(sql, new Object[]{userId});
 	}
 	
