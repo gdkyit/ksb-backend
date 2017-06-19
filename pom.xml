@@ -54,9 +54,13 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.42</version>
+			<version>6.0.6</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>1.0.31</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
@@ -101,10 +105,8 @@
 	</build>
 
 	<repositories>
-		<!-- <repository>
-			<id>spring-milestone</id>
-			<url>http://repo.spring.io/libs-release</url>
-		</repository> -->
+		<!-- <repository> <id>spring-milestone</id> <url>http://repo.spring.io/libs-release</url> 
+			</repository> -->
 		<repository>
 			<id>spring-snapshots</id>
 			<name>Spring Snapshots</name>
