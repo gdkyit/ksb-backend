@@ -18,15 +18,26 @@ public class UserGoupService {
 	public List<Map<String,Object>> getUserGroup(Integer userId){
 		return this.userGroupDao.getUserGroup(userId);
 	}
+	
 	public List<Map<String,Object>> getGroups(){
 		return this.userGroupDao.getGroups();
 	}
+	
 	public void insertUserGroup(List<UserGroup> userGroups,Integer userId){
 		this.userGroupDao.clearUserGroup(userId);
 		for(UserGroup userGroup:userGroups){
 			userGroup.setUserId(userId);
 			this.userGroupDao.insertUserGroup(userGroup);
 		}
+	}
+	
+	
+	public void updateUserDefaultGroup(UserGroup userGroup, Integer userId) {
+		// TODO Auto-generated method stub
+		this.userGroupDao.clearUserDefaultGroup(userId);
+		userGroup.setUserId(userId);
+		this.userGroupDao.updateUserDefaultGroup(userGroup);
+
 	}
 	
 }

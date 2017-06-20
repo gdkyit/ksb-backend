@@ -32,5 +32,21 @@ public class UserGroupDao extends BaseJdbcDao {
 				userId
 		});
 	}
+
+	public void clearUserDefaultGroup(Integer userId) {
+		// TODO Auto-generated method stub
+		String sql ="update user_group set is_default = 'N' where user_id =?";
+		this.jdbcTemplate.update(sql, new Object[]{
+				userId
+		});
+	}
+
+	public void updateUserDefaultGroup(UserGroup userGroup) {
+		// TODO Auto-generated method stub
+		String sql ="update user_group set is_default = 'Y' where user_id =? and group_id = ? ";
+		this.jdbcTemplate.update(sql, new Object[]{
+				userGroup.getUserId(),userGroup.getGroupId()
+		});
+	}
 	
 }
