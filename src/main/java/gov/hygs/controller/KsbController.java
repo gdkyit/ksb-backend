@@ -61,17 +61,7 @@ public class KsbController {
 
 
 
-	/**
-	 * 个人排行榜情况
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/checkUserPhoto", method = RequestMethod.GET)
-	public ResponseEntity<?> checkUserPhoto(@RequestParam("loginName") String loginName) {
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("rs", this.examService.checkUserPhoto(loginName));
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
-	}
+
 
 	/**
 	 * 当前人排行榜情况
