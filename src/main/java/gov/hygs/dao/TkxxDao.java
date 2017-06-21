@@ -210,6 +210,11 @@ public class TkxxDao extends BaseJdbcDao {
 			sb.append("  and  er.user_id =? and DATE_FORMAT(start_time,'%Y-%m-%d')=?   ");
 			return this.jdbcTemplate.queryForList(sb.toString(),userId,day);
 		}
+		/**
+		 * 用户答题明细
+		 * @param userId
+		 * @return
+		 */
 		public Map<String,Object> getTotalUserResultByUserId(Integer userId){
 			StringBuffer sb =  new StringBuffer(600);
 			sb.append(" select sum(rightCount) as totalRightCount,sum(errorCount) as totalErrorCount,sum(rightCount)+sum(errorCount) as totalCount from (  ");
@@ -226,14 +231,28 @@ public class TkxxDao extends BaseJdbcDao {
 			sb.append(" 		) as cc    ");
 			return this.jdbcTemplate.queryForMap(sb.toString(),new Object[]{userId,userId});
 		}
+		/**
+		 * 题库总题数
+		 * @return
+		 */
 		public int getTxtmCount(){
-			String sql="select count(*) as rs from  tktm";
+			String sql="select count(*) as rs from  tktm where yxbz='Y' and xybz ='Y' ";
 			return this.jdbcTemplate.queryForObject(sql,Integer.class);
 		}
+		/**
+		 * 用户被点赞数
+		 * @param userId
+		 * @return
+		 */
 		public int getUserLaudRecord(Integer userId){
 			String sql ="select count(*) as rs  from laud_record as la,tktm as tm where la.ZSTK_ID = tm.ID_ and tm.USER_ID = ? and la.type='1'";
 			return this.jdbcTemplate.queryForObject(sql,new Object[]{userId},Integer.class);
 		}
+		/**
+		 * 用户被纠错数
+		 * @param userId
+		 * @return
+		 */
 		public int getUserFix(Integer userId){
 			String sql ="select count(*) as rs  from laud_record as la,tktm as tm where la.ZSTK_ID = tm.ID_ and tm.USER_ID = ? and la.type='2'";
 			return this.jdbcTemplate.queryForObject(sql,new Object[]{userId},Integer.class);
@@ -288,11 +307,16 @@ public class TkxxDao extends BaseJdbcDao {
 			sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id order by rank  limit "+jfpms+" ");
 			return this.jdbcTemplate.queryForList(sb.toString(), new Object[]{flId});
 		}
-		public Object test() {
+		
+		public Object getUserDtxxSroceRank(String flId, Integer userId) {
 			// TODO Auto-generated method stub
-			dataSource.toString();
-			transationManager.toString();
-			namedParameterJdbcTemplate.hashCode();
-			return null;
+			StringBuffer sb =  new StringBuffer(600);
+			sb.append(" select u.user_name,u.login_name,flpm.* from (  ");
+			sb.append(" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
+			sb.append(" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
+			sb.append(" 		and tm.fl_id = ?   ");
+			sb.append(" 		group by tm.fl_id,ur.user_id ) as aa,(SELECT @rank:=0) C order by aa.score desc   ");
+			sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id and flpm.user_id = ? order by rank   ");
+			return this.jdbcTemplate.queryForList(sb.toString(), new Object[]{flId,userId});
 		}
 }

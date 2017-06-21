@@ -38,10 +38,12 @@ import gov.hygs.service.TkxxService;
 import gov.hygs.service.UserGoupService;
 import gov.hygs.service.ZskService;
 
-@RestController
-@RequestMapping(value = Constants.URI_API_PREFIX)
+////////////////////
+//////已废弃	
+////////////////////
+//@RestController
+//@RequestMapping(value = Constants.URI_API_PREFIX)
 public class KsbController {
-
 	@Resource
 	private TkxxService tkxxService;
 	@Resource
@@ -50,15 +52,6 @@ public class KsbController {
 	private UserGoupService userGoupService;
 	@Resource
 	private ZskService zskService;
-
-
-	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public ResponseEntity<?> test() {
-		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.test()), HttpStatus.OK);
-	}
-
-
 
 
 
@@ -93,15 +86,6 @@ public class KsbController {
 			}
 		}
 		param.put("userGroupRank", ls);
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
-	}
-
-	@RequestMapping(value = "/persionInfo", method = RequestMethod.GET)
-	public ResponseEntity<?> getPersionInfo(@RequestParam("userId") Integer userId) {
-
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userInfo", this.tkxxService.getUserByUserId(userId));
-		param.put("userScore", this.examService.getScoreGroupByFlId(userId));
 		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 

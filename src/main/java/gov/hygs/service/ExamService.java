@@ -192,6 +192,11 @@ public class ExamService {
 		return this.examDao.getScoreRank();
 	}
 
+	/**
+	 * 获取某个群组积分榜
+	 * @param groupId
+	 * @return
+	 */
 	public List<Map<String, Object>> getScoreRank(Integer groupId) {
 		return this.examDao.getScoreRank(groupId);
 	}
@@ -513,13 +518,19 @@ public class ExamService {
 	}
 
 	/**
-	 * 抢答排行榜
+	 * 某次考试排行榜
 	 * 
 	 * @return
 	 */
 	public List<Map<String, Object>> getExamScoreRank(String examId) {
 		return this.examDao.getExamScoreRank(examId);
 	}
+	/**
+	 * 某用户某次考试成绩
+	 * @param examId
+	 * @param userId
+	 * @return
+	 */
 	public Map<String, Object> getUserExamScoreRank(String examId,Integer userId) {
 		return this.examDao.getUserExamScoreRank(examId, userId);
 	}
@@ -572,6 +583,12 @@ public class ExamService {
 	public List<Map<String, Object>> getExamRecordList(Integer userId) {
 		return this.examDao.getExamRecordList(userId);
 	}
+	/**
+	 * 某个用户某个群组积分榜
+	 * @param groupId
+	 * @param userId
+	 * @return
+	 */
 	public Map<String, Object> getUserGroupScoreRank(Integer groupId,Integer userId) {
 		return this.examDao.getUserGroupScoreRank(groupId, userId);
 	}
@@ -588,6 +605,11 @@ public class ExamService {
 		return this.examDao.getExamRecordDetail(userId, examId);
 	}
 
+	/**
+	 * 用户参与的考试
+	 * @param userId
+	 * @return
+	 */
 	public List<Map<String, Object>> getUserExam(Integer userId) {
 		return this.examDao.getUserExam(userId);
 	}

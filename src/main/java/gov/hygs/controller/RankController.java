@@ -36,7 +36,7 @@ public class RankController {
 	private ZskService zskService;
 
 	/**
-	 * 积分榜个人秀
+	 * 个人秀
 	 * 
 	 * @return
 	 */
@@ -59,12 +59,25 @@ public class RankController {
 					ls.add(param1);
 				}
 			}
+
 		}
-		param.put("totalUserResult", this.tkxxService.getTotalUserResultByUserId(userId));
-		param.put("userGroupRank", ls);
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		ResponseMessage rs = null;
+		if (ls.size() > 0) {
+			param.put("totalUserResult", this.tkxxService.getTotalUserResultByUserId(userId));
+			param.put("userGroupRank", ls);
+			rs = ResponseMessage.success(param);
+		} else {
+			rs = ResponseMessage.error("400", "没设置默认积分榜");
+		}
+
+		return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
 
+	/**
+	 * 积分榜
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/jfb", method = RequestMethod.GET)
 	public ResponseEntity<?> getJfb() {
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -81,11 +94,23 @@ public class RankController {
 				}
 			}
 		}
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		ResponseMessage rs = null;
+		if (param.size() > 0) {
+			rs = ResponseMessage.success(param);
+		} else {
+			rs = ResponseMessage.error("400", "没设置默认积分榜");
+		}
+		return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
 
+	/**
+	 * 群组榜
+	 * 
+	 * @param groupId
+	 * @return
+	 */
 	@RequestMapping(value = "/qzb", method = RequestMethod.GET)
-	public ResponseEntity<?> getJfbByQz(@RequestParam("groupId") Integer groupId) {
+	public ResponseEntity<?> getQzb(@RequestParam("groupId") Integer groupId) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		param.put("scoreRank", this.examService.getScoreRank(groupId));// 累计
@@ -93,6 +118,11 @@ public class RankController {
 		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
 
+	/**
+	 * 用户已参与的考试列表
+	 * 
+	 * @return
+	 */
 	@RequestMapping(value = "/userExam", method = RequestMethod.GET)
 	public ResponseEntity<?> getUserExam() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
@@ -100,16 +130,16 @@ public class RankController {
 	}
 
 	/**
-	 * 抢答排行榜
+	 * 考试榜
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/qdphb", method = RequestMethod.GET)
-	public ResponseEntity<?> getQdphb(@RequestParam("examId") String examId) {
+	@RequestMapping(value = "/ksb", method = RequestMethod.GET)
+	public ResponseEntity<?> getKsb(@RequestParam("examId") String examId) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		// 考试排行榜
-		param.put("qdScoreRank", this.examService.getExamScoreRank(examId));
+		param.put("examRank", this.examService.getExamScoreRank(examId));
 		param.put("userExamRank", this.examService.getUserExamScoreRank(examId, userId));
 
 		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
@@ -135,9 +165,16 @@ public class RankController {
 	 */
 	@RequestMapping(value = "/flpm", method = RequestMethod.GET)
 	public ResponseEntity<?> getFlpm(@RequestParam("flId") String flId) {
-		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getFlpm(flId)), HttpStatus.OK);
+		Map<String, Object> param = new HashMap<String, Object>();
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
+		// 考试排行榜
+		param.put("dtxxRank",this.tkxxService.getFlpm(flId));
+		param.put("userDtxxRank", this.tkxxService.getUserDtxxSroceRank(flId, userId));
+
+		
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
-	
+
 	/**
 	 * 获取头像
 	 * 
@@ -149,4 +186,14 @@ public class RankController {
 		param.put("rs", this.examService.checkUserPhoto(loginName));
 		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/personalInfo", method = RequestMethod.GET)
+	public ResponseEntity<?> getPersonalInfo(@RequestParam("userId") Integer userId) {
+
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userInfo", this.tkxxService.getUserByUserId(userId));
+		param.put("userScore", this.examService.getScoreGroupByFlId(userId));
+		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+	}
+
 }

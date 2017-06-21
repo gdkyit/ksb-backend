@@ -354,6 +354,10 @@ public class TkxxService {
 
 	}
 
+	/**
+	 * 获取当前用户信息
+	 * @return
+	 */
 	public Map<String, Object> getCurrentUser() {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
@@ -416,15 +420,20 @@ public class TkxxService {
 			String day) {
 		return this.tkxxDao.getDtxxRecordDetail(userId, day);
 	}
+	/**
+	 * 用户答题和点赞次数
+	 * @param userId
+	 * @return
+	 */
 	public Map<String,Object> getTotalUserResultByUserId(Integer userId){
 		Map<String,Object> result = this.tkxxDao.getTotalUserResultByUserId(userId);
-		int tmCount = this.tkxxDao.getTxtmCount();
-		BigDecimal totalCount =(BigDecimal)result.get("totalCount");
-		if (null == totalCount) totalCount=new BigDecimal(0);
-		Integer unDoneCount = tmCount-totalCount.intValue();
-		result.put("unDoneCount", unDoneCount);
-		result.put("userLaudRecord", this.tkxxDao.getUserLaudRecord(userId));
-		result.put("userFix", this.tkxxDao.getUserFix(userId));
+		//int tmCount = this.tkxxDao.getTxtmCount(); 题库题目数
+		//BigDecimal totalCount =(BigDecimal)result.get("totalCount");
+		//if (null == totalCount) totalCount=new BigDecimal(0);
+		//Integer unDoneCount = tmCount-totalCount.intValue();
+		//result.put("unDoneCount", unDoneCount);
+		//result.put("userLaudRecord", this.tkxxDao.getUserLaudRecord(userId));用户被点赞数
+		//result.put("userFix", this.tkxxDao.getUserFix(userId));用户被纠错数
 		return result;
 	}
 	public Map<String,Object> getUserByUserId(Integer userId){
@@ -461,9 +470,9 @@ public class TkxxService {
 		return this.tkxxDao.getFlpm(flId);
 	}
 
-	public Object test() {
+	public Object getUserDtxxSroceRank(String flId, Integer userId) {
 		// TODO Auto-generated method stub
-		return tkxxDao.test();
+		return tkxxDao.getUserDtxxSroceRank(flId,userId);
 	}
 	
 }

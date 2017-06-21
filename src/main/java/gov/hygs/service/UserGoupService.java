@@ -14,7 +14,11 @@ import org.springframework.stereotype.Component;
 public class UserGoupService {
 	@Resource
 	private UserGroupDao userGroupDao;
-	
+	/**
+	 * 获取用户所在群组
+	 * @param userId
+	 * @return
+	 */
 	public List<Map<String,Object>> getUserGroup(Integer userId){
 		return this.userGroupDao.getUserGroup(userId);
 	}
