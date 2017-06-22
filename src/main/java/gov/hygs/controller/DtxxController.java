@@ -73,7 +73,8 @@ public class DtxxController {
 	 */
 	@RequestMapping(value = "/checkDtxx", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckDtxx(@RequestBody ExamItem item) throws AuthenticationException {
-		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.doCheckDtxx(item)), HttpStatus.OK);
+		ResponseMessage rs=this.tkxxService.doCheckDtxx(item);
+		return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
 
 

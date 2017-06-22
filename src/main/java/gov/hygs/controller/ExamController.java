@@ -75,7 +75,8 @@ public class ExamController {
 	 */
 	@RequestMapping(value = "/checkExamItem", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckExamItem(@RequestBody ExamItem item) throws AuthenticationException {
-		return new ResponseEntity<>(ResponseMessage.success(this.examService.doCheckExamItem(item)), HttpStatus.OK);
+		ResponseMessage rs=this.examService.doCheckExamItem(item);
+		return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
 
 	/**

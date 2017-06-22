@@ -16,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.gdky.restful.entity.ResponseMessage;
+
 @Component
 public class ExamService {
 	@Resource
@@ -58,7 +60,8 @@ public class ExamService {
 		return this.examDao.getExamDetailByExamId(examId,userId);
 	}
 
-	public Map<String, Object> doCheckExamItem(ExamItem item) {
+	public ResponseMessage doCheckExamItem(ExamItem item) {
+		ResponseMessage returnValue = null;
 		Map<String, Object> param = new HashMap<String, Object>();
 		String rs = "恭喜答对";
 		long sec = (item.getEndTime().getTime() - item.getStartTime().getTime()) / 1000;
@@ -176,11 +179,11 @@ public class ExamService {
 
 			param.put("rs", rs);
 			param.put("userRs", userRs);
+			returnValue = ResponseMessage.success(param);
 		}else{
-			param.put("rs", "该题目还没有录入答案！");
-			param.put("e", "error");
+			returnValue = ResponseMessage.error("400","该题目还没有录入答案！");
 		}
-		return param;
+		return returnValue;
 	}
 
 	/**

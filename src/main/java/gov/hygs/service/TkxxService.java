@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import com.gdky.restful.entity.ResponseMessage;
 import com.gdky.restful.security.Md5Utils;
 
 import gov.hygs.dao.TkxxDao;
@@ -98,7 +99,8 @@ public class TkxxService {
 		return tkxxDao.getTkDaByTkId(tkId);
 	}
 
-	public Map<String, Object> doCheckDtxx(ExamItem item) {
+	public ResponseMessage doCheckDtxx(ExamItem item) {
+		ResponseMessage returnValue = null;
 		Map<String, Object> param = new HashMap<String, Object>();
 		String rs = "恭喜答对";
 		long sec = (item.getEndTime().getTime() - item.getStartTime().getTime()) / 1000;
@@ -212,11 +214,11 @@ public class TkxxService {
 		
 		param.put("rs", rs);
 		param.put("userRs", userRs);
+		returnValue = ResponseMessage.success(param);
 		}else{
-			param.put("rs", "该题目还没有录入答案，请点纠错进行题目纠错");
-			param.put("e", "error");
+			returnValue =ResponseMessage.error("400", "该题目还没有录入答案，请点纠错进行题目纠错");
 		}
-		return param;
+		return returnValue;
 	}
 
 	public void insertLaudRecord(LoudRecord rec) {

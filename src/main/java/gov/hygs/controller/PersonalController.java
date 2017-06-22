@@ -67,7 +67,7 @@ public class PersonalController {
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUser(@RequestBody UserEntity user) {
 		this.tkxxService.updateUser(user);
-		return new ResponseEntity<>(ResponseMessage.success("ok"), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("OK"), HttpStatus.OK);
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class PersonalController {
 	@RequestMapping(value = "/updateUserPwd", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUserPwd(@RequestBody UserEntity user) {
 		this.tkxxService.updateUserPwd(user);
-		return new ResponseEntity<>(ResponseMessage.success("ok"), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("OK"), HttpStatus.OK);
 	}
 
 	@ResponseBody
@@ -124,9 +124,7 @@ public class PersonalController {
 		if (null != userTkdys) {
 			this.tkxxService.insertTkdy(userTkdys, userId);
 		}
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("rs", "ok");
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("OK"), HttpStatus.OK);
 	}
 
 	/**
@@ -189,9 +187,7 @@ public class PersonalController {
 	public ResponseEntity<?> saveUserGroups(@RequestBody List<UserGroup> userGroups) {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		this.userGoupService.insertUserGroup(userGroups, userId);
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("rs", "ok");
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("OK"), HttpStatus.OK);
 	}
 
 	/**
@@ -205,9 +201,7 @@ public class PersonalController {
 	public ResponseEntity<?> saveUserDefaultGroup(@RequestBody UserGroup userGroup) {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		this.userGoupService.updateUserDefaultGroup(userGroup, userId);
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("rs", "ok");
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("OK"), HttpStatus.OK);
 	}
 
 	/**
