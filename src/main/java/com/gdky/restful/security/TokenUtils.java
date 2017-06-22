@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +26,8 @@ public class TokenUtils {
 	private String secret = Constants.TOKEN_SECRET;
 
 	private Integer expiration = Constants.TOKEN_EXPIRATION;
-	
+	@Value("${spring.profiles.active}")  
+	private String active;
 	
 	@Resource
 	private AuthService authService;
@@ -175,12 +177,17 @@ public class TokenUtils {
 		final String username = this.getUsernameFromToken(token);
 		final String password = this.getPasswordFromToken(token);
 		final String dlxx = this.getDlxxFromToken(token);
+		
 		if(user.getDlxx()==null||dlxx==null){
 			return false;
 		}else{
-			return (username.equals(user.getUsername())
-				&& !(this.isTokenExpired(token)) && password.equals(user
-				.getPassword()) && dlxx.equals(user.getDlxx()));
+			boolean rs =(username.equals(user.getUsername())
+					&& !(this.isTokenExpired(token)) && password.equals(user
+							.getPassword()) );
+			if(!active.equals("test")){
+				rs = rs&& dlxx.equals(user.getDlxx());
+			}
+			return rs;
 		}
 		
 	}

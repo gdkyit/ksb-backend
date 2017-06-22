@@ -67,9 +67,7 @@ public class PersonalController {
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUser(@RequestBody UserEntity user) {
 		this.tkxxService.updateUser(user);
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("rs", "ok");
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("ok"), HttpStatus.OK);
 	}
 
 	/**
@@ -81,9 +79,7 @@ public class PersonalController {
 	@RequestMapping(value = "/updateUserPwd", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUserPwd(@RequestBody UserEntity user) {
 		this.tkxxService.updateUserPwd(user);
-		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("rs", "ok");
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		return new ResponseEntity<>(ResponseMessage.success("ok"), HttpStatus.OK);
 	}
 
 	@ResponseBody
