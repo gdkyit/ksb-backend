@@ -64,6 +64,7 @@ public class PersonalController {
 	 * @param user
 	 * @return
 	 */
+	@Transactional
 	@RequestMapping(value = "/updateUser", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUser(@RequestBody UserEntity user) {
 		this.tkxxService.updateUser(user);
@@ -76,6 +77,7 @@ public class PersonalController {
 	 * @param user
 	 * @return
 	 */
+	@Transactional
 	@RequestMapping(value = "/updateUserPwd", method = RequestMethod.POST)
 	public ResponseEntity<?> updateUserPwd(@RequestBody UserEntity user) {
 		this.tkxxService.updateUserPwd(user);
@@ -118,6 +120,7 @@ public class PersonalController {
 	 * @param
 	 * @return
 	 */
+	@Transactional
 	@RequestMapping(value = "/tkfldy", method = RequestMethod.POST)
 	public ResponseEntity<?> saveTkfldy(@RequestBody List<UserTkdy> userTkdys) {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");

@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -73,6 +74,7 @@ public class ExamController {
 	 * @return
 	 * @throws AuthenticationException
 	 */
+	@Transactional
 	@RequestMapping(value = "/checkExamItem", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckExamItem(@RequestBody ExamItem item) throws AuthenticationException {
 		ResponseMessage rs=this.examService.doCheckExamItem(item);

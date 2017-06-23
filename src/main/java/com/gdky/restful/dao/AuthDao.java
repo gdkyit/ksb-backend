@@ -34,7 +34,11 @@ public class AuthDao extends BaseJdbcDao {
 		String sql = " select * from user where login_name= ?";
 		List<User> users= this.jdbcTemplate.query(sql.toString(), new Object[] {username  },
 				new UserRowMapper());
-		return users.get(0);
+		if(users.size()>0){
+			return users.get(0);
+		}else{
+			return null;
+		}
 	}
 	private class RoleRowMapper implements RowMapper<Role> {
 		public Role mapRow(final ResultSet rs, final int arg1) throws SQLException {

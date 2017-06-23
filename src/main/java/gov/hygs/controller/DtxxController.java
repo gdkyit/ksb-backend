@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -71,6 +72,7 @@ public class DtxxController {
 	 * @return
 	 * @throws AuthenticationException
 	 */
+	@Transactional
 	@RequestMapping(value = "/checkDtxx", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckDtxx(@RequestBody ExamItem item) throws AuthenticationException {
 		ResponseMessage rs=this.tkxxService.doCheckDtxx(item);
@@ -85,6 +87,7 @@ public class DtxxController {
 	 * @return
 	 * @throws AuthenticationException
 	 */
+	@Transactional
 	@RequestMapping(value = "/laudRecord", method = RequestMethod.POST)
 	public ResponseEntity<?> doTmLoudRecord(@RequestBody LoudRecord rec) throws AuthenticationException {
 		String rs = "点赞成功";

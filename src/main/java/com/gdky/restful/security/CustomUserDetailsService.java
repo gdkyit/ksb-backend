@@ -36,7 +36,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		User user = authService.getUser(username);
 		if (user == null) {
 			log.warn("用户不正确");
-			throw new UsernameNotFoundException("User not found");
+			throw new UsernameNotFoundException("账户或密码错误！");
 		}
 		log.warn("获取用户");
 		CustomUserDetails u = new CustomUserDetails(user);
