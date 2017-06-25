@@ -45,7 +45,8 @@ public class TkxxDao extends BaseJdbcDao {
 	 */
 	public List<Map<String,Object>> getTktmByFlId(int flId){
 		Integer rowCount = this.getSystemProp().get("fxts" );
-		String sql ="select tm.*,ly.TITLE as lytitle,ly.CONTENT as lycontent from tktm as tm,tmly as ly where tm.TMLY_ID = ly.ID_  and tm.xybz='Y' and tm.yxbz='Y' and tm.fl_id= ? ORDER BY  RAND() LIMIT "+rowCount;
+		String sql ="select tm.ID_,tm.FL_ID,tm.USER_ID,DATE_FORMAT(tm.CREATE_DATE,'%Y-%m-%d %T') CREATE_DATE,tm.SP_DATE,tm.SPR_ID,tm.DEPTID,tm.CONTENT,tm.TMFZ,tm.TMND,tm.TMLY_ID,tm.MODE,tm.YXBZ,tm.XYBZ,tm.DRBZ,tm.KSBZ,ly.TITLE as lytitle,ly.CONTENT as lycontent "
+				+ "from tktm as tm,tmly as ly where tm.TMLY_ID = ly.ID_  and tm.xybz='Y' and tm.yxbz='Y' and tm.fl_id= ? ORDER BY  RAND() LIMIT "+rowCount;
 		return this.jdbcTemplate.queryForList(sql,new Object[]{flId});
 	}
 	/**
@@ -58,11 +59,11 @@ public class TkxxDao extends BaseJdbcDao {
 		return this.jdbcTemplate.queryForMap(sql,new Object[]{id});
 	}
 	public Map<String,Object> getUserByLoginName(String loginName){
-		String sql ="select * from user where login_name = ?";
+		String sql ="select u.id_,u.LOGIN_NAME,u.USER_NAME,u.PHONE,DATE_FORMAT(u.RZSJ,'%Y-%m-%d %T') RZSJ,u.ZW,u.PWD,u.PHOTO,u.DEPTID,DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d %T') BIRTHDAY,u.DLXX from user u where u.login_name = ?";
 		return this.jdbcTemplate.queryForMap(sql,new Object[]{loginName});
 	}
 	public Map<String,Object> getUserByUserId(Integer userId){
-		String sql ="select * from user where id_ = ?";
+		String sql ="select u.id_,u.LOGIN_NAME,u.USER_NAME,u.PHONE,DATE_FORMAT(u.RZSJ,'%Y-%m-%d %T') RZSJ,u.ZW,u.PWD,u.PHOTO,u.DEPTID,DATE_FORMAT(u.BIRTHDAY,'%Y-%m-%d %T') BIRTHDAY,u.DLXX from user u where u.id_ = ?";
 		Map<String,Object> user = this.jdbcTemplate.queryForMap(sql,new Object[]{userId});
 		Integer deptId = (Integer)user.get("DEPTID");
 		Map<String,Object> dept = this.getDeptBydeptId(deptId);

@@ -23,7 +23,15 @@ public class ExamDao extends BaseJdbcDao {
 	 */
 	public List<Map<String, Object>> getExam(int userId, String type) {
 		StringBuffer sb = new StringBuffer(100);
-		sb.append("  select exam.* from exam as exam,exam_tsqz as tsqz,user_group as ug  ");
+		sb.append("  select exam.id_, ");
+		sb.append(" DATE_FORMAT(exam.START_TIME,'%Y-%m-%d %T')  START_TIME,");
+		sb.append(" DATE_FORMAT(exam.END_TIME,'%Y-%m-%d %T')  END_TIME,");
+		sb.append(" exam.TITLE,");
+		sb.append(" exam.EXAM_TYPE,");
+		sb.append(" exam.FQR_ID,");
+		sb.append(" exam.remark,");
+		sb.append(" exam.exam_time");
+		sb.append(" from exam as exam,exam_tsqz as tsqz,user_group as ug  ");
 		sb.append("  where exam.id_ = tsqz.exam_id ");
 		sb.append("    and tsqz.group_id = ug.group_id ");
 		sb.append("   and ug.user_id =? ");
@@ -47,7 +55,8 @@ public class ExamDao extends BaseJdbcDao {
 	 * @return
 	 */
 	public List<Map<String, Object>> getExamDetailByExamId(Integer examId,Integer userId) {
-		String sql = "select ly.TITLE as lytitle,ly.CONTENT as lycontent ,detail.id_ as detailId, detail.xh,detail.EXAM_ID,tm.* from exam_detail as detail ,tktm as tm ,tmly as ly where tm.TMLY_ID = ly.ID_ and detail.exam_id = ? and detail.TM_ID = tm.ID_"
+		String sql = "select ly.TITLE as lytitle,ly.CONTENT as lycontent ,detail.id_ as detailId, detail.xh,detail.EXAM_ID,tm.ID_,tm.FL_ID,tm.USER_ID,DATE_FORMAT(tm.CREATE_DATE,'%Y-%m-%d %T') CREATE_DATE,tm.SP_DATE,tm.SPR_ID,tm.DEPTID,tm.CONTENT,tm.TMFZ,tm.TMND,tm.TMLY_ID,tm.MODE,tm.YXBZ,tm.XYBZ,tm.DRBZ,tm.KSBZ"
+				+ " from exam_detail as detail ,tktm as tm ,tmly as ly where tm.TMLY_ID = ly.ID_ and detail.exam_id = ? and detail.TM_ID = tm.ID_"
 				+ " and detail.id_ not in (select exam_detail_id from exam_user_result where user_id = ?)  order by rand() ";
 		return this.jdbcTemplate.queryForList(sql, new Object[] { examId,userId });
 	}
@@ -1108,19 +1117,25 @@ public class ExamDao extends BaseJdbcDao {
 
 	public List<Map<String, Object>> getUserExam(Integer userId) {
 		StringBuffer sb = new StringBuffer(200);
-		sb.append("	select   ");
-		sb.append("	    e . *   ");
-		sb.append("	from   ");
-		sb.append("	    exam as e,   ");
-		sb.append("	    (select distinct   ");
-		sb.append("	        exam_id   ");
-		sb.append("	    from   ");
-		sb.append("	        exam_user_result as eur, exam_detail as ed   ");
-		sb.append("	    where   ");
-		sb.append("	       eur.exam_detail_id = ed.id_   ");
-		sb.append("	            and eur.user_id = ?  ) as b   ");
-		sb.append("	where   ");
-		sb.append("	    e.ID_ = b.exam_id  and e.exam_type='1'  order by e.start_time desc");
+		sb.append("select  e.id_, ");
+		sb.append(" DATE_FORMAT(e.START_TIME,'%Y-%m-%d %T')  START_TIME,");
+		sb.append(" DATE_FORMAT(e.END_TIME,'%Y-%m-%d %T')  END_TIME,");
+		sb.append(" e.TITLE,");
+		sb.append(" e.EXAM_TYPE,");
+		sb.append(" e.FQR_ID,");
+		sb.append(" e.remark,");
+		sb.append(" e.exam_time");
+		sb.append(" from   ");
+		sb.append("     exam as e,   ");
+		sb.append("     (select distinct   ");
+		sb.append("         exam_id   ");
+		sb.append("     from   ");
+		sb.append("         exam_user_result as eur, exam_detail as ed   ");
+		sb.append("     where   ");
+		sb.append("        eur.exam_detail_id = ed.id_   ");
+		sb.append("             and eur.user_id = ?  ) as b   ");
+		sb.append(" where   ");
+		sb.append("     e.ID_ = b.exam_id  and e.exam_type='1'  order by e.start_time desc");
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { userId });
 	}
