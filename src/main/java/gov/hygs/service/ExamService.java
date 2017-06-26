@@ -141,7 +141,8 @@ public class ExamService {
 			Double tmfz = (Double) tktm.get("TMFZ");
 			Map<String, Double> sjxs = this.tkxxDao.getSjxs();
 			Double xs = 0d;
-			String examType = (String) tktm.get("EXAM_TYPE");
+			//EXAM_TYPE 原来值 不知道作用
+			String examType = (String) tktm.get("MODE");
 			String result = "N";
 			if (true == flag) {
 				result = "Y";
