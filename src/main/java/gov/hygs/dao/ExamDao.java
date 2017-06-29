@@ -77,7 +77,9 @@ public class ExamDao extends BaseJdbcDao {
 				userRs.setResultScore(rs.getDouble("EXAM_SCORE"));
 				userRs.setResult(rs.getString("RESULT"));
 				userRs.setTkId(rs.getString("tm_id"));
+				userRs.setResultTime(rs.getLong("EXAM_TIME"));
 				userRs.setExamDetailId(rs.getInt("EXAM_DETAIL_ID"));
+				userRs.setType(rs.getString("type"));
 				return userRs;
 			}
 			

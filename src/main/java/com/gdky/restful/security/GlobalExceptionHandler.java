@@ -1,4 +1,4 @@
-package com.gdky.restful.config;
+package com.gdky.restful.security;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

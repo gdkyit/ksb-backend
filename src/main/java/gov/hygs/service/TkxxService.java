@@ -69,10 +69,11 @@ public class TkxxService {
 	 * 根据分类查询题目信息
 	 * 
 	 * @param flId
+	 * @param userId 
 	 * @return
 	 */
-	public List<Map<String, Object>> getTktmByFlId(int flId) {
-		return tkxxDao.getTktmByFlId(flId);
+	public List<Map<String, Object>> getTktmByFlId(int flId, Integer userId) {
+		return tkxxDao.getTktmByFlId(flId,userId);
 	}
 
 	/**
@@ -221,14 +222,22 @@ public class TkxxService {
 		return returnValue;
 	}
 
-	public void insertLaudRecord(LoudRecord rec) {
+	public ResponseMessage insertLaudRecord(LoudRecord rec) {
 		UserDetails userDetails = (UserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
 		String loginName = userDetails.getUsername();
+		Map<String, String> param = new HashMap<String, String>();
 		Map<String, Object> user = this.tkxxDao.getUserByLoginName(loginName);
 		rec.setUserId((Integer) user.get("ID_"));
 		rec.setDeptId((Integer) user.get("DEPTID"));
-		this.tkxxDao.insertLaudRecord(rec);
+		if(tkxxDao.checkLaudRecord(rec)){
+			String rs = "题目已经被点赞过了";
+			return ResponseMessage.error("400",rs);
+		}else{
+			this.tkxxDao.insertLaudRecord(rec);
+			String rs = "点赞成功";
+			return ResponseMessage.success(rs);
+		}
 	}
 	public void initGdUser()throws IOException{
 		String path = "/Users/david/downloads/deptuser.xls";

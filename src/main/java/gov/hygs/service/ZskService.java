@@ -16,4 +16,8 @@ public class ZskService {
 	 public List<Map<String,Object>> getZsk(Integer userId){
 		 return this.zskDak.getZsk(userId);
 	 }
+	public  List<Map<String,Object>>  getXdjl(Integer userId) {
+		// TODO Auto-generated method stub
+		 return this.zskDak.getXdjl(userId);
+	}
 }

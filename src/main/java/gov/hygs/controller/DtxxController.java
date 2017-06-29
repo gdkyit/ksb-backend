@@ -47,10 +47,10 @@ public class DtxxController {
 	 * @return
 	 */
 	@RequestMapping(value = "/tk", method = RequestMethod.GET)
-	public ResponseEntity<?> getTk(@RequestParam("parentId") String parentId) {
-
+	public ResponseEntity<?> getTk(@RequestParam("tkflId") String tkflId) {
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		List<Map<String, Object>> rs = null;
-		rs = this.tkxxService.getTktmByFlId(Integer.parseInt(parentId));
+		rs = this.tkxxService.getTktmByFlId(Integer.parseInt(tkflId),userId);
 		return new ResponseEntity<>(ResponseMessage.success(rs), HttpStatus.OK);
 	}
 
@@ -90,11 +90,8 @@ public class DtxxController {
 	@Transactional
 	@RequestMapping(value = "/laudRecord", method = RequestMethod.POST)
 	public ResponseEntity<?> doTmLoudRecord(@RequestBody LoudRecord rec) throws AuthenticationException {
-		String rs = "点赞成功";
-		this.tkxxService.insertLaudRecord(rec);
-		Map<String, String> param = new HashMap<String, String>();
-		param.put("rs", rs);
-		return new ResponseEntity<>(ResponseMessage.success(param), HttpStatus.OK);
+		ResponseMessage param = this.tkxxService.insertLaudRecord(rec);
+		return new ResponseEntity<>(param, HttpStatus.OK);
 	}
 	
 	/**
@@ -128,5 +125,11 @@ public class DtxxController {
 	public ResponseEntity<?> getUserZskTs() {
 		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
 		return new ResponseEntity<>(ResponseMessage.success(this.zskService.getZsk(userId)), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/userXdjlTs", method = RequestMethod.GET)
+	public ResponseEntity<?> getUserXdjlTs() {
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
+		return new ResponseEntity<>(ResponseMessage.success(this.zskService.getXdjl(userId)), HttpStatus.OK);
 	}
 }
