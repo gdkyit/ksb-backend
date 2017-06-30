@@ -35,43 +35,6 @@ public class RankController {
 	@Resource
 	private ZskService zskService;
 
-	/**
-	 * 个人秀
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/grx", method = RequestMethod.GET)
-	public ResponseEntity<?> getGrx() {
-		Map<String, Object> param = new HashMap<String, Object>();
-		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
-		List<Map<String, Object>> ls = new ArrayList<Map<String, Object>>();
-		List<Map<String, Object>> userGroup = this.userGoupService.getUserGroup(userId);
-		if (null != userGroup) {
-			for (Map<String, Object> group : userGroup) {
-				Map<String, Object> param1 = new HashMap<String, Object>();
-				Integer groupId = (Integer) group.get("ID_");
-				String isDefault = (String) group.get("is_default");
-				if (isDefault.equals("Y")) {
-					param1.put("group", group);
-					// param1.put("scoreRank",
-					// this.examService.getScoreRank(groupId));// 累计
-					param1.put("userScoreRank", this.examService.getUserGroupScoreRank(groupId, userId));
-					ls.add(param1);
-				}
-			}
-
-		}
-		ResponseMessage rs = null;
-		if (ls.size() > 0) {
-			param.put("totalUserResult", this.tkxxService.getTotalUserResultByUserId(userId));
-			param.put("userGroupRank", ls);
-			rs = ResponseMessage.success(param);
-		} else {
-			rs = ResponseMessage.error("400", "没设置默认积分榜");
-		}
-
-		return new ResponseEntity<>(rs, HttpStatus.OK);
-	}
 
 	/**
 	 * 积分榜

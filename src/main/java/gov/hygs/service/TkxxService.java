@@ -466,10 +466,10 @@ public class TkxxService {
 	}
 	/**
 	 * 查询用户出题贡献值
+	 * @param userId 
 	 * @return
 	 */
-	public Map<String,Object> getUserGxz(){
-		Integer userId = (Integer) this.getCurrentUser().get("ID_");
+	public Map<String,Object> getUserGxz(Integer userId){
 		return this.tkxxDao.getUserGxz(userId);
 	}
 	/**

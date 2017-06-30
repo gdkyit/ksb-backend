@@ -12,14 +12,13 @@ public final class Constants {
 
 	public static final String FRAMEWORK_SCHEMA = ""; // zs_new.
 
-
 	public static final String URI_API_FRAMEWORK_PRIFIX = "/api/fw";
 	
 	public static final String TOKEN_SECRET = "c2VjcmV0IGZvciBnZHpz";
 	
 	public static final String SALT = "Z2R6c21pcw==";
 	
-	public static final Integer TOKEN_EXPIRATION = 864000; //seconds
+	public static final Integer TOKEN_EXPIRATION = 8640000; //seconds
 	
 	public static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 	
@@ -27,9 +26,9 @@ public final class Constants {
 
 	public static final int HASHID_LEN = 6;
 	
-	public  static final String UPLOAD_LOCATION="d:/upload"; //win
+	//public  static final String UPLOAD_LOCATION="d:/upload/"; //win
 	
-//	public  static final String UPLOAD_LOCATION="/usr/local/upload"; //linux
+	public  static final String UPLOAD_LOCATION="/usr/local/tomcat/app/images/"; //linux
 	
 	public static final String BARCODE_LOCATION = UPLOAD_LOCATION + "/barcode";
 }

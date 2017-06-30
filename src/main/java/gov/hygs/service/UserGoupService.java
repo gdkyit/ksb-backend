@@ -43,5 +43,10 @@ public class UserGoupService {
 		this.userGroupDao.updateUserDefaultGroup(userGroup);
 
 	}
+
+	public void updateUpload(Integer userId, String image) {
+		// TODO Auto-generated method stub
+		userGroupDao.updateUpload(userId,image);
+	}
 	
 }

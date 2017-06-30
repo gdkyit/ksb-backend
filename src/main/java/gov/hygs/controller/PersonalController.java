@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.gdky.restful.config.Constants;
 import com.gdky.restful.entity.ResponseMessage;
+import com.gdky.restful.security.CustomUserDetails;
 
 import gov.hygs.entity.UserEntity;
 import gov.hygs.entity.UserGroup;
@@ -47,17 +48,42 @@ public class PersonalController {
 	private UserGoupService userGoupService;
 	@Resource
 	private ZskService zskService;
-
 	/**
 	 * 当前用户信息
+	 * 用户贡献值
 	 * 
 	 * @return
 	 */
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentUser() {
-		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getCurrentUser()), HttpStatus.OK);
+		Map<String, Object> param = new HashMap<String, Object>();
+		Integer userId = (Integer) this.tkxxService.getCurrentUser().get("ID_");
+		param.put("userInfo",this.tkxxService.getCurrentUser());
+		param.put("userGxz",this.tkxxService.getUserGxz(userId));
+		List<Map<String, Object>> userGroup = this.userGoupService.getUserGroup(userId);
+		if (null != userGroup) {
+			for (Map<String, Object> group : userGroup) {
+				Integer groupId = (Integer) group.get("ID_");
+				String isDefault = (String) group.get("is_default");
+				if (isDefault!=null&&isDefault.equals("Y")) {
+					param.put("group", group);
+					param.put("userScoreRank", this.examService.getUserGroupScoreRank(groupId, userId));
+				}
+			}
+
+		}
+		ResponseMessage rs = null;
+		if (param.get("group")!=null) {
+			param.put("totalUserResult", this.tkxxService.getTotalUserResultByUserId(userId));
+			rs = ResponseMessage.success(param);
+		} else {
+			param.put("userScoreRank","没设置默认积分榜无法查看个人排名信息！");
+			rs = ResponseMessage.success(param);
+		}
+		return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
 
+	
 	/**
 	 * 个人信息维护
 	 * 
@@ -87,15 +113,18 @@ public class PersonalController {
 	@ResponseBody
 	@RequestMapping(path = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<?> onSubmit(@RequestParam("file") MultipartFile file) throws IOException {
+		
 		if (null != file) {
-			// String path ="/Users/david/Documents/github/sxbapp";//
-			String path = "/usr/local/tomcat/app/images";
+			CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
+				    .getAuthentication()
+				    .getPrincipal();
+			String path = Constants.UPLOAD_LOCATION;
 
 			File uploadDir = new File(path);
 			if (!uploadDir.exists()) {
 				uploadDir.mkdirs();
 			}
-			String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+			String userName = userDetails.getLoginName();
 
 			File userDir = new File(path + File.separator + userName);
 			if (!userDir.exists()) {
@@ -109,6 +138,9 @@ public class PersonalController {
 				storageFile.createNewFile();
 			}
 			IOUtils.copy(file.getInputStream(), new FileOutputStream(storageFile));
+			
+			userGoupService.updateUpload(userDetails.getId_(),"/" + userName+ "/avatar.jpg");
+			
 		}
 		return new ResponseEntity<>(ResponseMessage.success("upload OK"), HttpStatus.OK);
 
@@ -230,14 +262,5 @@ public class PersonalController {
 		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserTmjiuchuo()), HttpStatus.OK);
 	}
 
-	/**
-	 * 查询用户出题贡献值
-	 * 
-	 * @return
-	 */
-	@RequestMapping(value = "/userGxz", method = RequestMethod.GET)
-	public ResponseEntity<?> getUserGxz() {
-		return new ResponseEntity<>(ResponseMessage.success(this.tkxxService.getUserGxz()), HttpStatus.OK);
-	}
 
 }

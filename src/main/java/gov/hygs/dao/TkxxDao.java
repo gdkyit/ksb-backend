@@ -365,7 +365,7 @@ public class TkxxDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getFlpm(String flId) {
 		Integer jfpms = this.getSystemProp().get("jfpms");
 		StringBuffer sb = new StringBuffer(600);
-		sb.append(" select u.user_name,u.login_name,flpm.* from (  ");
+		sb.append(" select u.user_name,u.login_name,u.photo,flpm.* from (  ");
 		sb.append(
 				" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
 		sb.append(

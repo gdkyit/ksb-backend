@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.gdky.restful.config.Constants;
 import com.gdky.restful.entity.ResponseMessage;
 
 @Component
@@ -567,7 +568,7 @@ public class ExamService {
 	public boolean checkUserPhoto(String loginName) {
 
 		boolean result = false;
-		String filePath = "/usr/local/tomcat/app/images/" + loginName
+		String filePath = Constants.UPLOAD_LOCATION + loginName
 				+ "/avatar.jpg";
 		File file = new File(filePath);
 		if (file.exists()) {

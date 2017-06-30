@@ -48,5 +48,11 @@ public class UserGroupDao extends BaseJdbcDao {
 				userGroup.getUserId(),userGroup.getGroupId()
 		});
 	}
+
+	public void updateUpload(Integer userId, String image) {
+		// TODO Auto-generated method stub
+		String sql ="update user set photo = ? where id_ = ? ";
+		this.jdbcTemplate.update(sql, new Object[]{image,userId});
+	}
 	
 }
