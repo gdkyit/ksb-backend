@@ -1,4 +1,4 @@
-package com.gdky.restful.security;
+package com.gdky.restful.utils;
 
 import java.security.MessageDigest;
 

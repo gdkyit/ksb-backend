@@ -22,9 +22,9 @@ import com.gdky.restful.entity.AuthRequest;
 import com.gdky.restful.entity.AuthResponse;
 import com.gdky.restful.entity.Role;
 import com.gdky.restful.security.CustomUserDetails;
-import com.gdky.restful.security.TokenUtils;
 import com.gdky.restful.service.AuthService;
 import com.gdky.restful.service.UserLogService;
+import com.gdky.restful.utils.TokenUtils;
 
 @RestController
 @RequestMapping(value = Constants.URI_API_PREFIX)

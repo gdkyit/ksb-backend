@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 
 import com.gdky.restful.config.Constants;
+import com.gdky.restful.utils.TokenUtils;
 
 public class AuthenticationTokenFilter extends
 		UsernamePasswordAuthenticationFilter {

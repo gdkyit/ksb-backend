@@ -18,7 +18,7 @@ public final class Constants {
 	
 	public static final String SALT = "Z2R6c21pcw==";
 	
-	public static final Integer TOKEN_EXPIRATION = 8640000; //seconds
+	public static final Integer TOKEN_EXPIRATION = 864000; //seconds
 	
 	public static final String AUTH_HEADER_NAME = "X-AUTH-TOKEN";
 	

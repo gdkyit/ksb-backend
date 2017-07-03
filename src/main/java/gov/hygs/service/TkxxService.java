@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import com.gdky.restful.entity.ResponseMessage;
-import com.gdky.restful.security.Md5Utils;
+import com.gdky.restful.utils.Md5Utils;
 
 import gov.hygs.dao.TkxxDao;
 import gov.hygs.entity.ExamItem;

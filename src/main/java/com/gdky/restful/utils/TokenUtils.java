@@ -1,4 +1,4 @@
-package com.gdky.restful.security;
+package com.gdky.restful.utils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.gdky.restful.config.Constants;
+import com.gdky.restful.security.CustomUserDetails;
 import com.gdky.restful.service.AuthService;
 
 import io.jsonwebtoken.Claims;
@@ -126,7 +127,7 @@ public class TokenUtils {
 	}
 
 	private Date generateExpirationDate() {
-		return new Date(System.currentTimeMillis() + this.expiration * 1000);
+		return new Date(System.currentTimeMillis() + this.expiration * 30000);
 	}
 
 	private Boolean isTokenExpired(String token) {
