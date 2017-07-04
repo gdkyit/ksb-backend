@@ -222,11 +222,23 @@ public class TkxxDao extends BaseJdbcDao {
 	}
 
 	public List<Map<String, Object>> getUserLaud(int userId) {
-		String sql = "select tm.content ,laud.dz_date,u.user_name  from laud_record as laud,tktm as tm ,user as u  "
+		String sql = "select tm.content ,DATE_FORMAT(laud.dz_date,'%Y-%m-%d') dz_date,u.user_name  from laud_record as laud,tktm as tm ,user as u  "
 				+ "  where  laud.type ='1' and tm.id_ = laud.zstk_id and tm.user_id =?   and u.id_ = laud.user_id ";
 		return this.jdbcTemplate.queryForList(sql, new Object[] { userId });
 	}
+	
+	/**
+	 * 根据userId查看收到的题目纠错
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	public List<Map<String, Object>> getUserTmjiuchuo(Integer userId) {
+		String sql = "select tm.user_id ctr,tm.CONTENT,DATE_FORMAT(lr.dz_date,'%Y-%m-%d') dz_date,lr.remark from laud_record lr,tktm tm  where lr.type =2 and tm.id_ = lr.ZSTK_ID  and tm.USER_ID =?";
+		return this.jdbcTemplate.queryForList(sql, new Object[] { userId });
+	}
 
+	
 	/**
 	 * 答题学习记录按天统计
 	 * 
@@ -334,16 +346,6 @@ public class TkxxDao extends BaseJdbcDao {
 		return this.jdbcTemplate.queryForObject(sql, new Object[] { parentId }, Integer.class);
 	}
 
-	/**
-	 * 根据userId查看收到的题目纠错
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	public List<Map<String, Object>> getUserTmjiuchuo(Integer userId) {
-		String sql = "select tm.user_id ctr,tm.CONTENT,lr.* from laud_record lr,tktm tm  where lr.type =2 and tm.id_ = lr.ZSTK_ID  and tm.USER_ID =?";
-		return this.jdbcTemplate.queryForList(sql, new Object[] { userId });
-	}
 
 	public Map<String, Object> getUserGxz(Integer userId) {
 		String sql = "select count(*) count,sum(gxz) gxz from tk_gxjl as gxjl,tktm tm where tm.id_ = gxjl.tk_id and gxjl.user_id =? and gxly = 2";

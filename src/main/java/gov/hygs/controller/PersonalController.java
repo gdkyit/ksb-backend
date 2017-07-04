@@ -115,6 +115,10 @@ public class PersonalController {
 	public ResponseEntity<?> onSubmit(@RequestParam("file") MultipartFile file) throws IOException {
 		
 		if (null != file) {
+			long fileSize = file.getSize();
+			if(fileSize>3*1024*1024){
+				return new ResponseEntity<>(ResponseMessage.error("400","图片大于3M，无法上传"), HttpStatus.OK);
+			}
 			CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
 				    .getAuthentication()
 				    .getPrincipal();
@@ -138,7 +142,6 @@ public class PersonalController {
 				storageFile.createNewFile();
 			}
 			IOUtils.copy(file.getInputStream(), new FileOutputStream(storageFile));
-			
 			userGoupService.updateUpload(userDetails.getId_(),"/" + userName+ "/avatar.jpg");
 			
 		}

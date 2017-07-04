@@ -230,13 +230,19 @@ public class TkxxService {
 		Map<String, Object> user = this.tkxxDao.getUserByLoginName(loginName);
 		rec.setUserId((Integer) user.get("ID_"));
 		rec.setDeptId((Integer) user.get("DEPTID"));
-		if(tkxxDao.checkLaudRecord(rec)){
-			String rs = "题目已经被点赞过了";
-			return ResponseMessage.error("400",rs);
+		if( rec.getType().equals("1")){
+			if(tkxxDao.checkLaudRecord(rec)){
+				String rs = "题目已经被点赞过了";
+				return ResponseMessage.error("400",rs);
+			}else{
+				this.tkxxDao.insertLaudRecord(rec);
+				String rs = "点赞成功";
+				return ResponseMessage.success(rs);
+			}
 		}else{
-			this.tkxxDao.insertLaudRecord(rec);
-			String rs = "点赞成功";
-			return ResponseMessage.success(rs);
+				this.tkxxDao.insertLaudRecord(rec);
+				String rs = "成功";
+				return ResponseMessage.success(rs);
 		}
 	}
 	public void initGdUser()throws IOException{
