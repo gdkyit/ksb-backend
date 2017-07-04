@@ -116,8 +116,8 @@ public class PersonalController {
 		
 		if (null != file) {
 			long fileSize = file.getSize();
-			if(fileSize>3*1024*1024){
-				return new ResponseEntity<>(ResponseMessage.error("400","图片大于3M，无法上传"), HttpStatus.OK);
+			if(fileSize>1*1024*1024){
+				return new ResponseEntity<>(ResponseMessage.error("400","图片大于1M，无法上传"), HttpStatus.OK);
 			}
 			CustomUserDetails userDetails = (CustomUserDetails) SecurityContextHolder.getContext()
 				    .getAuthentication()
