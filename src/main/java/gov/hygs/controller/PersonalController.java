@@ -231,7 +231,7 @@ public class PersonalController {
 	/**
 	 * 设置默认积分榜群组
 	 * 
-	 * @param userGroups
+	 * @param userGroup
 	 * @return
 	 */
 	@Transactional
@@ -257,7 +257,6 @@ public class PersonalController {
 	/**
 	 * 根据userId查看收到的题目纠错
 	 * 
-	 * @param userId
 	 * @return
 	 */
 	@RequestMapping(value = "/userTmJiuChuo", method = RequestMethod.GET)
