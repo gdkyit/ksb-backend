@@ -18,8 +18,11 @@ public class MessageService {
 
     @Resource
     private MessageDao messageDao;
+
     public ResponseMessage getGroupChangeMsg(Map<String, Object> user) {
         List<Map<String,Object>> ls = this.messageDao.getGroupChangeMsg(user);
+        this.messageDao.markMsgRead(user);
+
         if (ls.size()>0){
             return new ResponseMessage("", "200", ls);
         }else{
