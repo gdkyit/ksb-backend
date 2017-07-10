@@ -17,7 +17,7 @@ public class UserGroupDao extends BaseJdbcDao {
 	}
 	
 	public List<Map<String,Object>> getGroups(){
-		String sql ="select * from grouptable ";
+		String sql ="select * from grouptable gt where (now()<= gt.effective_date or gt.effective_date is null)";
 		return this.jdbcTemplate.queryForList(sql);
 	}
 	public void insertUserGroup(UserGroup userGroup){
