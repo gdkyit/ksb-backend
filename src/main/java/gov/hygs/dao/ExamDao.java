@@ -24,6 +24,7 @@ public class ExamDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getExam(int userId, String type) {
 		StringBuffer sb = new StringBuffer(100);
 		sb.append("  select exam.id_, ");
+		sb.append(" DATE_FORMAT(exam.START_TIME,'%Y-%m-%d')  day,");
 		sb.append(" DATE_FORMAT(exam.START_TIME,'%Y-%m-%d %T')  START_TIME,");
 		sb.append(" DATE_FORMAT(exam.END_TIME,'%Y-%m-%d %T')  END_TIME,");
 		sb.append(" exam.TITLE,");
@@ -87,14 +88,13 @@ public class ExamDao extends BaseJdbcDao {
 	}
 	public void insertUserResult(UserResult userRs) {
 		if(checkExamUserResult(userRs.getUserId(), userRs.getExamDetailId())){
-			String sql = "insert into exam_user_result (user_id,EXAM_DETAIL_ID,answer,result,exam_time,exam_score,start_time,end_time,type) values (?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into exam_user_result (user_id,EXAM_DETAIL_ID,answer,result,exam_time,exam_score,start_time,end_time) values (?,?,?,?,?,?,?,?)";
 			this.jdbcTemplate.update(
 					sql,
 					new Object[] { userRs.getUserId(), userRs.getExamDetailId(),
 							userRs.getAnswer(), userRs.getResult(),
 							userRs.getResultTime(), userRs.getResultScore(),
-							userRs.getStartTime(), userRs.getEndTime(),
-							userRs.getType() });
+							userRs.getStartTime(), userRs.getEndTime() });
 		}
 	}
 	public boolean checkExamUserResult(Object userId,Object examDetailId){
@@ -1090,7 +1090,7 @@ public class ExamDao extends BaseJdbcDao {
 	 */
 	public List<Map<String, Object>> getExamRecordList(Integer userId) {
 		StringBuffer sb = new StringBuffer(100);
-		sb.append("  select c.*,e.title from (  ");
+		sb.append("  select c.*,e.title,e.EXAM_TYPE from (  ");
 		sb.append("         select exam_id,sum(score) as score,sum(right1) as rightCount,sum(error1) as errorCount,sum(right1+error1) totalCount    ");
 		sb.append(" 		  from(   ");
 		sb.append(" 		  select exam_score as score,case when result ='Y'  then 1 when result='N' then 0 end as right1, case when result ='Y'  then 0 when result='N' then 1 end as error1, ");
