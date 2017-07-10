@@ -136,9 +136,9 @@ public class ExamDao extends BaseJdbcDao {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select a.*,fl.tkmc from (  ");
 		sb.append("   		select sum(score) as score ,fl_id from (  "); 
-		sb.append("   		select sum(eur.exam_score) as score,tm.fl_id from exam_user_result as eur,exam_detail as ed,exam as e,tktm as tm where eur.EXAM_DETAIL_ID = ed.id_  ");
-		sb.append(" and tm.id_ = ed.tm_id and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   and eur.user_id= ?  group by tm.fl_id ");
-		sb.append("   		union all   ");
+	//	sb.append("   		select sum(eur.exam_score) as score,tm.fl_id from exam_user_result as eur,exam_detail as ed,exam as e,tktm as tm where eur.EXAM_DETAIL_ID = ed.id_  ");
+	//	sb.append(" and tm.id_ = ed.tm_id and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   and eur.user_id= ?  group by tm.fl_id ");
+	//	sb.append("   		union all   ");
 		sb.append("  		select sum(ur.result_score) as score,tm.fl_id from user_result as ur ,tktm as tm where ur.user_id = ? and tm.ID_ = ur.TM_ID group by tm.fl_id  "); 
 		sb.append("   		) as bb group by bb.fl_id   ");
 		sb.append("   		) as a,tkfl as fl   ");
@@ -157,14 +157,15 @@ public class ExamDao extends BaseJdbcDao {
 		}
 		return rs;
 	}
+	
 	public List<Map<String, Object>> getScoreRank(Integer groupId) {
 		Integer jfpms = this.getSystemProp().get("jfpms");
 		StringBuffer sb = new StringBuffer();
 		sb.append("  select convert(@rank:=@rank+1,SIGNED) AS rank, ccd.* from (   ");
 		sb.append("  		select a.* ,u.login_name,u.user_name,u.photo from (  ");
 		sb.append("  		select sum(score) as score ,user_id from (  ");
-		sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
-		sb.append("  		union all  ");
+		//sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
+		//sb.append("  		union all  ");
 		sb.append("  		select sum(result_score) as score,user_id from user_result   group by user_id  ");
 		sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
@@ -173,6 +174,7 @@ public class ExamDao extends BaseJdbcDao {
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { groupId });
 	}
+	
 	public Map<String, Object> getUserGroupScoreRank(Integer groupId,Integer userId) {
 	 
 		StringBuffer sb = new StringBuffer();
@@ -180,8 +182,8 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append("  select convert(@rank:=@rank+1,SIGNED) AS rank, ccd.* from (   ");
 		sb.append("  		select a.* ,u.login_name,u.user_name from (  ");
 		sb.append("  		select sum(score) as score ,user_id from (  ");
-		sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
-		sb.append("  		union all  ");
+	//	sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
+	//	sb.append("  		union all  ");
 		sb.append("  		select sum(result_score) as score,user_id from user_result   group by user_id  ");
 		sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
@@ -1097,7 +1099,7 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append("           ed.EXAM_ID ");
 		sb.append(" 		  from exam_user_result as eur,exam_detail as ed where eur.user_id = ? and eur.EXAM_DETAIL_ID = ed.ID_ ");
 		sb.append(" 		   ) as b group by b.EXAM_ID ) as c,exam as e ");
-		sb.append(" where c.exam_id = e.id_ ");
+		sb.append(" where c.exam_id = e.id_ order by e.START_TIME desc ");
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { userId });
 	}
