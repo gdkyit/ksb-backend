@@ -368,10 +368,8 @@ public class TkxxDao extends BaseJdbcDao {
 		Integer jfpms = this.getSystemProp().get("jfpms");
 		StringBuffer sb = new StringBuffer(600);
 		sb.append(" select u.user_name,u.login_name,u.photo,flpm.* from (  ");
-		sb.append(
-				" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
-		sb.append(
-				" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
+		sb.append(" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
+		sb.append(" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
 		sb.append(" 		and tm.fl_id = ?   ");
 		sb.append(" 		group by tm.fl_id,ur.user_id ) as aa,(SELECT @rank:=0) C order by aa.score desc   ");
 		sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id order by rank  limit " + jfpms + " ");
@@ -382,10 +380,8 @@ public class TkxxDao extends BaseJdbcDao {
 		// TODO Auto-generated method stub
 		StringBuffer sb = new StringBuffer(600);
 		sb.append(" select u.user_name,u.login_name,flpm.* from (  ");
-		sb.append(
-				" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
-		sb.append(
-				" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
+		sb.append(" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
+		sb.append(" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
 		sb.append(" 		and tm.fl_id = ?   ");
 		sb.append(" 		group by tm.fl_id,ur.user_id ) as aa,(SELECT @rank:=0) C order by aa.score desc   ");
 		sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id and flpm.user_id = ? order by rank   ");
