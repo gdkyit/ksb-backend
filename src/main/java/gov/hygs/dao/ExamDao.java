@@ -135,16 +135,11 @@ public class ExamDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getScoreGroupByFlId(Integer userId) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select a.*,fl.tkmc from (  ");
-		sb.append("   		select sum(score) as score ,fl_id from (  "); 
-	//	sb.append("   		select sum(eur.exam_score) as score,tm.fl_id from exam_user_result as eur,exam_detail as ed,exam as e,tktm as tm where eur.EXAM_DETAIL_ID = ed.id_  ");
-	//	sb.append(" and tm.id_ = ed.tm_id and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   and eur.user_id= ?  group by tm.fl_id ");
-	//	sb.append("   		union all   ");
 		sb.append("  		select sum(ur.result_score) as score,tm.fl_id from user_result as ur ,tktm as tm where ur.user_id = ? and tm.ID_ = ur.TM_ID group by tm.fl_id  "); 
-		sb.append("   		) as bb group by bb.fl_id   ");
 		sb.append("   		) as a,tkfl as fl   ");
 		sb.append("   		where a.fl_id = fl.id_   ");
 		sb.append("   		order by a.score desc ");
-		return this.jdbcTemplate.queryForList(sb.toString(),new Object[]{userId,userId});
+		return this.jdbcTemplate.queryForList(sb.toString(),new Object[]{userId});
 	}
 	public Map<String,Integer> getSystemProp(){
 		String sql ="select * from system_props where key_ ='jfpms'  ";

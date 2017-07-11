@@ -152,7 +152,6 @@ public class RankController {
 
 	@RequestMapping(value = "/personalInfo", method = RequestMethod.GET)
 	public ResponseEntity<?> getPersonalInfo(@RequestParam("userId") Integer userId) {
-
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userInfo", this.tkxxService.getUserByUserId(userId));
 		param.put("userScore", this.examService.getScoreGroupByFlId(userId));
