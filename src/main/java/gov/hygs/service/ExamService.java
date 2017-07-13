@@ -144,7 +144,7 @@ public class ExamService {
 				}
 			}
 			double score = 0;
-			Map<String, Object> tktm = this.tkxxDao.getTktmById(item.getTkId());
+			Map<String, Object> tktm = this.examDao.getTmByExam(item);
 			Double tmfz = (Double) tktm.get("TMFZ");
 			Map<String, Double> sjxs = this.tkxxDao.getSjxs();
 			Double xs = 0d;

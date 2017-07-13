@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.gdky.restful.dao.BaseJdbcDao;
 
+import gov.hygs.entity.ExamItem;
 import gov.hygs.entity.UserResult;
 
 @Repository
@@ -56,11 +57,17 @@ public class ExamDao extends BaseJdbcDao {
 	 * @return
 	 */
 	public List<Map<String, Object>> getExamDetailByExamId(Integer examId,Integer userId) {
-		String sql = "select ly.TITLE as lytitle,ly.CONTENT as lycontent ,detail.id_ as detailId, detail.xh,detail.EXAM_ID,tm.ID_,tm.FL_ID,tm.USER_ID,DATE_FORMAT(tm.CREATE_DATE,'%Y-%m-%d %T') CREATE_DATE,tm.SP_DATE,tm.SPR_ID,tm.DEPTID,tm.CONTENT,tm.TMFZ,tm.TMND,tm.TMLY_ID,tm.MODE,tm.YXBZ,tm.XYBZ,tm.DRBZ,tm.KSBZ"
+		String sql = "select ly.TITLE as lytitle,ly.CONTENT as lycontent ,detail.id_ as detailId, detail.xh,detail.EXAM_ID,tm.ID_,tm.FL_ID,tm.USER_ID,DATE_FORMAT(tm.CREATE_DATE,'%Y-%m-%d %T') CREATE_DATE,tm.SP_DATE,tm.SPR_ID,tm.DEPTID,tm.CONTENT,tm.TMND,tm.TMLY_ID,tm.MODE,tm.YXBZ,tm.XYBZ,tm.DRBZ,tm.KSBZ"
 				+ " from exam_detail as detail ,tktm as tm ,tmly as ly where tm.TMLY_ID = ly.ID_ and detail.exam_id = ? and detail.TM_ID = tm.ID_"
 				+ " and detail.id_ not in (select exam_detail_id from exam_user_result where user_id = ?)  order by rand() ";
 		return this.jdbcTemplate.queryForList(sql, new Object[] { examId,userId });
 	}
+	/**
+	 * 用户已答题情况
+	 * @param examId
+	 * @param userId
+	 * @return
+	 */
 	public List<UserResult> getUserRs(Integer examId,Integer userId){
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select eur.*,ed.EXAM_ID,ed.tm_id from exam_user_result eur,exam_detail ed ");
@@ -1137,5 +1144,13 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append("     e.ID_ = b.exam_id  and e.exam_type='1'  order by e.start_time desc");
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { userId });
+	}
+
+	public Map<String, Object> getTmByExam(ExamItem item) {
+		// TODO Auto-generated method stub
+		StringBuffer sql =new StringBuffer("select case when t.TMND='0' then e.jct  else  e.jct end tmfz from exam e,exam_detail d,tktm t where e.ID_=d.EXAM_ID and d.TM_ID=t.ID_");
+		 sql.append(" and d.id_ = ? and d.TM_ID = ? ");
+				
+		return this.jdbcTemplate.queryForMap(sql.toString(), new Object[] { item.getExamDetailId(),item.getTkId() });
 	}
 }
