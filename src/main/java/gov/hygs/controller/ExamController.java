@@ -1,11 +1,13 @@
 package gov.hygs.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -29,7 +31,8 @@ import gov.hygs.service.ZskService;
 @RequestMapping(value = Constants.URI_API_PREFIX)
 public class ExamController {
 	
-
+	private Logger logger = Logger.getLogger(getClass());
+	
 	@Resource
 	private TkxxService tkxxService;
 	@Resource
@@ -77,6 +80,8 @@ public class ExamController {
 	@Transactional
 	@RequestMapping(value = "/checkExamItem", method = RequestMethod.POST)
 	public ResponseEntity<?> doCheckExamItem(@RequestBody ExamItem item) throws AuthenticationException {
+		Date start = item.getStartTime();
+		logger.info("START : "+ start.toString());
 		ResponseMessage rs=this.examService.doCheckExamItem(item);
 		return new ResponseEntity<>(rs, HttpStatus.OK);
 	}
