@@ -90,8 +90,13 @@ public class TkxxDao extends BaseJdbcDao {
 		Map<String, Object> dept = this.getDeptBydeptId(deptId);
 		user.put("dept", dept);
 		Integer parentId = (Integer) dept.get("PARENT_ID");
-		Map<String, Object> parentDept = this.getDeptBydeptId(parentId);
-		user.put("parentDept", parentDept);
+		if(parentId==null){
+			user.put("parentDept", null);
+		}else{
+			Map<String, Object> parentDept = this.getDeptBydeptId(parentId);
+			user.put("parentDept", parentDept);
+		}
+		
 		return user;
 	}
 
