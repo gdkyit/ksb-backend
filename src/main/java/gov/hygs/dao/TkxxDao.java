@@ -27,7 +27,7 @@ public class TkxxDao extends BaseJdbcDao {
 	 * @return
 	 */
 	public List<Map<String, Object>> getTopTmfl() {
-		String sql = "select * from tkfl as fl,(select count(*) as rs,fl_id from tktm group by FL_ID) as tm where fl.PARENT_ID = 0  "
+		String sql = "select * from tkfl as fl,(select count(*) as rs,fl_id from tktm  where xybz='Y' and yxbz='Y' group by FL_ID) as tm where fl.PARENT_ID = 0  "
 				+ " and fl.id_ = tm.fl_id order by fl.pxh ";
 		return this.jdbcTemplate.queryForList(sql);
 	}
@@ -221,7 +221,7 @@ public class TkxxDao extends BaseJdbcDao {
 	}
 
 	public List<Map<String, Object>> getUserFl(Integer userId) {
-		String sql = "select fl.*,tm.rs from tkfl as fl,tkfldy as dy ,(select count(*) as rs,fl_id from tktm group by FL_ID) as tm where dy.tkfl_id = fl.id_ and dy.user_id = ? and fl.id_ = tm.fl_id order by fl.pxh ";
+		String sql = "select fl.*,tm.rs from tkfl as fl,tkfldy as dy ,(select count(*) as rs,fl_id from tktm  where xybz='Y' and yxbz='Y' group by FL_ID) as tm where dy.tkfl_id = fl.id_ and dy.user_id = ? and fl.id_ = tm.fl_id order by fl.pxh ";
 		return this.jdbcTemplate.queryForList(sql, new Object[] { userId });
 
 	}
