@@ -16,14 +16,7 @@ public class ZskDao extends BaseJdbcDao {
 	  sql.append("     and tsnr.TSJLID =qz.ID_ and tsnr.ZSKID = zsk.ID_ and qz.GROUP_ID = ug.GROUP_ID and zsk.zskly_id = ly.id_ ");  
 	  sql.append("     and ug.USER_ID =?  order by tsjl.tsrq desc ");  
 	   List<Map<String,Object>> ls =  this.jdbcTemplate.queryForList(sql.toString(),new Object[]{userId}) ; 
-	/*   if(null != ls){
-		   for(Map<String,Object> zsk :ls){
-			   String content = (String)zsk.get("CONTENT");
-			   content = content.replaceAll("\n", "<br />");
-			   zsk.put("CONTENT", content);
-		   }
-	   }*/
-	   
+
 	   return ls;
    }
 
@@ -35,14 +28,6 @@ public List<Map<String, Object>> getXdjl(Integer userId) {
 		  sql.append("     and tsnr.TSJLID =qz.ID_ and tsnr.xdjlID = xdjl.ID_ and qz.GROUP_ID = ug.GROUP_ID and xdjl.xdjlly_id = ly.id_ ");  
 		  sql.append("     and ug.USER_ID =?  order by tsjl.tsrq desc ");  
 		   List<Map<String,Object>> ls =  this.jdbcTemplate.queryForList(sql.toString(),new Object[]{userId}) ; 
-		/*   if(null != ls){
-			   for(Map<String,Object> xdjl :ls){
-				   String content = (String)xdjl.get("CONTENT");
-				   content = content.replaceAll("\n", "<br />");
-				   xdjl.put("CONTENT", content);
-			   }
-		   }*/
-		   
 		   return ls;
 }
    

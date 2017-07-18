@@ -2,12 +2,10 @@ package gov.hygs.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -17,8 +15,7 @@ import gov.hygs.entity.ExamItem;
 import gov.hygs.entity.UserResult;
 
 @Repository
-public class ExamDao extends BaseJdbcDao {
-	private Logger logger = Logger.getLogger(getClass());
+public class ExamDao extends BaseJdbcDao {	
 	
 	/**
 	 * 查询考试
@@ -98,9 +95,6 @@ public class ExamDao extends BaseJdbcDao {
 		});
 	}
 	public void insertUserResult(UserResult userRs) {
-
-		Date start = userRs.getStartTime();
-		logger.info("USERSTART : "+ start.toString());
 		if(checkExamUserResult(userRs.getUserId(), userRs.getExamDetailId())){
 			String sql = "insert into exam_user_result (user_id,EXAM_DETAIL_ID,answer,result,exam_time,exam_score,start_time,end_time) values (?,?,?,?,?,?,?,?)";
 			this.jdbcTemplate.update(

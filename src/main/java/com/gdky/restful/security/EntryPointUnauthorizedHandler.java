@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -17,9 +18,12 @@ import com.gdky.restful.entity.ResponseMessage;
 
 @Component
 public class EntryPointUnauthorizedHandler implements AuthenticationEntryPoint {
+
+	private Logger logger = Logger.getLogger(getClass());
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
 			throws IOException, ServletException {
+		logger.error("401", e);
 		// 返回一个401响应代替默认的重定向到登录页面
 		response.setContentType("application/json");
 		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
