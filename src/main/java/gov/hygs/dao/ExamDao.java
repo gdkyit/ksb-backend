@@ -809,7 +809,7 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append(" 	  		) as bb group by bb.user_id      ");
 		sb.append(" 	   		) as a,user as u      ");
 		sb.append(" 	   		where a.user_id = u.id_     "); 
-		sb.append(" 	   		order by a.score desc ,a.time limit "+jfpms+" ) as ccd,(SELECT @rank:=0) C     ");
+		sb.append(" 	   		order by a.score desc ,a.time desc limit "+jfpms+" ) as ccd,(SELECT @rank:=0) C     ");
 		return this.jdbcTemplate.queryForList(sb.toString(),new Object[]{examId});
 	}
 	/**
@@ -827,7 +827,7 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
 		sb.append("  		where a.user_id = u.id_  ");
-		sb.append("  		order by a.score desc ) as ccd,(SELECT @rank:=0) C  ");
+		sb.append("  		order by a.score desc,a.time desc ) as ccd,(SELECT @rank:=0) C  ");
 		sb.append(" ) as userExamRank where userExamRank.user_id = ?   ");
 		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sb.toString(),new Object[]{examId,userId});
 		if(ls != null && ls.size() == 1){
