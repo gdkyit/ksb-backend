@@ -2,6 +2,7 @@ package gov.hygs.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1117,9 +1118,37 @@ public class ExamDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getExamRecordDetail(Integer userId,
 			String examId) {
 		StringBuffer sb = new StringBuffer(100);
-		sb.append(" select tm.content,er.answer,er.result,er.EXAM_SCORE as score from exam_user_result as er,tktm as tm,exam_detail ed where er.exam_detail_id = ed.id_ and ed.tm_id = tm.id_  ");
-		sb.append(" and  er.user_id =? and ed.exam_id= ?  ");
-		return this.jdbcTemplate.queryForList(sb.toString(), userId, examId);
+		sb.append(" select ed.ID_ id ,b.XZ_KEY xz,b.CONTENT da,tm.content,er.answer,er.result,er.EXAM_SCORE as score  from exam_user_result as er,tktm as tm,exam_detail ed,tkxzx b,tkda c where er.exam_detail_id = ed.id_ and ed.tm_id = tm.id_  ");
+		sb.append(" and tm.ID_ = c.TK_ID and c.TKXZXID=b.ID_ and  er.user_id =? and ed.exam_id= ?  order by ed.id_,b.XZ_KEY");
+		List<Map<String, Object>> ls = this.jdbcTemplate.queryForList(sb.toString(), userId, examId);
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		Map<String,Object> remap = new HashMap<String,Object>();
+		Integer id = null;
+		String da ="";
+		for(Map<String,Object> map :ls){
+			if(id!=null && id.equals((Integer)map.get("id"))){
+				da+=";"+(String)map.get("xz")+":"+(String)map.get("da");
+			}else if( id!= null && !(id==(Integer)map.get("id"))){
+				remap.put("da",da);
+				result.add(remap);
+				remap = new HashMap<String,Object>();
+				id = (Integer)map.get("id");
+				da = (String)map.get("xz")+":"+(String)map.get("da");
+				remap.put("content", (String)map.get("content"));
+				remap.put("answer", (String)map.get("answer"));
+				remap.put("result", (String)map.get("result"));
+				remap.put("score", (Double)map.get("score"));
+			}else{
+				id = (Integer)map.get("id");
+				da = (String)map.get("xz")+":"+(String)map.get("da");
+				remap.put("content", (String)map.get("content"));
+				remap.put("answer", (String)map.get("answer"));
+				remap.put("result", (String)map.get("result"));
+				remap.put("score", (Double)map.get("score"));
+			}
+			
+		}
+		return result;
 	}
 
 	public List<Map<String, Object>> getUserExam(Integer userId) {
