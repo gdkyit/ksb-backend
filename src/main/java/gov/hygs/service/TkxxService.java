@@ -196,8 +196,9 @@ public class TkxxService {
 		String result = "N";
 		if (true == flag) {
 			result = "Y";
+			score = tmfz;
 		}
-		score = tmfz;
+	
 		UserDetails userDetails = (UserDetails) SecurityContextHolder
 				.getContext().getAuthentication().getPrincipal();
 		String loginName = userDetails.getUsername();

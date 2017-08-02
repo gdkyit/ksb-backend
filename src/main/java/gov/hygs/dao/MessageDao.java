@@ -13,7 +13,7 @@ import java.util.Map;
 public class MessageDao extends BaseJdbcDao {
     public List<Map<String,Object>> getGroupChangeMsg(Map<String, Object> user){
         StringBuffer sql = new StringBuffer();
-        sql.append("select gt.GROUP_NAME as groupname");
+        sql.append("select ug.id_,gt.GROUP_NAME as groupname");
         sql.append(" from user_group ug, grouptable gt ");
         sql.append(" where ug.GROUP_ID = gt.ID_ ");
         sql.append(" and ug.read_mark ='N' ");
@@ -22,12 +22,12 @@ public class MessageDao extends BaseJdbcDao {
         return this.jdbcTemplate.queryForList(sql.toString(),new Object[]{user.get("ID_")});
     }
 
-    public void markMsgRead(Map<String, Object> user) {
+    public void markMsgRead(Map<String, Object> user, String id) {
         StringBuffer sql = new StringBuffer();
         sql.append(" update user_group ug ");
         sql.append(" set ug.read_mark = 'Y' ");
-        sql.append(" where ug.user_id =? ");
-        this.jdbcTemplate.update(sql.toString(), new Object[]{user.get("ID_")});
+        sql.append(" where ug.user_id =? and ug.id_ = ? ");
+        this.jdbcTemplate.update(sql.toString(), new Object[]{user.get("ID_"),id});
 
     }
 }

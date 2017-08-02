@@ -21,7 +21,7 @@ public class MessageService {
 
     public ResponseMessage getGroupChangeMsg(Map<String, Object> user) {
         List<Map<String,Object>> ls = this.messageDao.getGroupChangeMsg(user);
-        this.messageDao.markMsgRead(user);
+        //
 
         if (ls.size()>0){
             return new ResponseMessage("", "200", ls);
@@ -29,4 +29,10 @@ public class MessageService {
             return new ResponseMessage("", "204", ls);
         }
     }
+
+	public Object signGroup(Map<String, Object> user, String id) {
+		// TODO Auto-generated method stub
+		this.messageDao.markMsgRead(user,id);
+		 return "ok";
+	}
 }

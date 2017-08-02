@@ -12,7 +12,7 @@ import gov.hygs.entity.UserGroup;
 public class UserGroupDao extends BaseJdbcDao {
 
 	public List<Map<String,Object>> getUserGroup(Integer userId){
-		String sql ="select gt.*,ug.is_default from user_group as ug,grouptable as gt where gt.id_ = ug.group_id and (now()<= gt.effective_date or gt.effective_date is null) and ug.USER_ID= ?";
+		String sql ="select gt.*,ug.is_default,ug.read_mark from user_group as ug,grouptable as gt where gt.id_ = ug.group_id and (now()<= gt.effective_date or gt.effective_date is null) and ug.USER_ID= ?";
 		return this.jdbcTemplate.queryForList(sql, new Object[]{userId});
 	}
 	
@@ -21,9 +21,9 @@ public class UserGroupDao extends BaseJdbcDao {
 		return this.jdbcTemplate.queryForList(sql);
 	}
 	public void insertUserGroup(UserGroup userGroup){
-		String sql = "insert into user_group(user_id,group_id) values(?,?)";
+		String sql = "insert into user_group(user_id,group_id,is_default,read_mark) values(?,?,?,?)";
 		this.jdbcTemplate.update(sql, new Object[]{
-				userGroup.getUserId(),userGroup.getGroupId()
+				userGroup.getUserId(),userGroup.getGroupId(),userGroup.getIsDefault(),userGroup.getReadMark()
 			});
 	}
 	public void clearUserGroup(Integer userId){

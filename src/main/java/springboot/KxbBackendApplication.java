@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
 
+
 @ServletComponentScan(basePackages={"com.gdky.restful","gov.hygs"})
 @ComponentScan(basePackages={"com.gdky.restful","gov.hygs"})
 @SpringBootApplication

@@ -27,7 +27,7 @@ public class TkxxDao extends BaseJdbcDao {
 	 * @return
 	 */
 	public List<Map<String, Object>> getTopTmfl() {
-		String sql = "select * from tkfl as fl,(select count(*) as rs,fl_id from tktm group by FL_ID) as tm where fl.PARENT_ID = 0  "
+		String sql = "select * from tkfl as fl,(select count(*) as rs,fl_id from tktm  where xybz='Y' and yxbz='Y' group by FL_ID) as tm where fl.PARENT_ID = 0  "
 				+ " and fl.id_ = tm.fl_id order by fl.pxh ";
 		return this.jdbcTemplate.queryForList(sql);
 	}
@@ -90,8 +90,13 @@ public class TkxxDao extends BaseJdbcDao {
 		Map<String, Object> dept = this.getDeptBydeptId(deptId);
 		user.put("dept", dept);
 		Integer parentId = (Integer) dept.get("PARENT_ID");
-		Map<String, Object> parentDept = this.getDeptBydeptId(parentId);
-		user.put("parentDept", parentDept);
+		if(parentId==null){
+			user.put("parentDept", null);
+		}else{
+			Map<String, Object> parentDept = this.getDeptBydeptId(parentId);
+			user.put("parentDept", parentDept);
+		}
+		
 		return user;
 	}
 
@@ -216,7 +221,7 @@ public class TkxxDao extends BaseJdbcDao {
 	}
 
 	public List<Map<String, Object>> getUserFl(Integer userId) {
-		String sql = "select fl.*,tm.rs from tkfl as fl,tkfldy as dy ,(select count(*) as rs,fl_id from tktm group by FL_ID) as tm where dy.tkfl_id = fl.id_ and dy.user_id = ? and fl.id_ = tm.fl_id order by fl.pxh ";
+		String sql = "select fl.*,tm.rs from tkfl as fl,tkfldy as dy ,(select count(*) as rs,fl_id from tktm  where xybz='Y' and yxbz='Y' group by FL_ID) as tm where dy.tkfl_id = fl.id_ and dy.user_id = ? and fl.id_ = tm.fl_id order by fl.pxh ";
 		return this.jdbcTemplate.queryForList(sql, new Object[] { userId });
 
 	}
@@ -368,10 +373,8 @@ public class TkxxDao extends BaseJdbcDao {
 		Integer jfpms = this.getSystemProp().get("jfpms");
 		StringBuffer sb = new StringBuffer(600);
 		sb.append(" select u.user_name,u.login_name,u.photo,flpm.* from (  ");
-		sb.append(
-				" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
-		sb.append(
-				" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
+		sb.append(" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
+		sb.append(" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
 		sb.append(" 		and tm.fl_id = ?   ");
 		sb.append(" 		group by tm.fl_id,ur.user_id ) as aa,(SELECT @rank:=0) C order by aa.score desc   ");
 		sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id order by rank  limit " + jfpms + " ");
@@ -382,10 +385,8 @@ public class TkxxDao extends BaseJdbcDao {
 		// TODO Auto-generated method stub
 		StringBuffer sb = new StringBuffer(600);
 		sb.append(" select u.user_name,u.login_name,flpm.* from (  ");
-		sb.append(
-				" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
-		sb.append(
-				" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
+		sb.append(" 		select convert(@rank:=@rank+1,SIGNED) AS rank,aa.user_id,FORMAT(aa.score,2) as score from (   ");
+		sb.append(" 		select sum(result_score) as score,fl_id ,ur.user_id from user_result as ur,tktm as tm where tm.id_ = ur.tm_id    ");
 		sb.append(" 		and tm.fl_id = ?   ");
 		sb.append(" 		group by tm.fl_id,ur.user_id ) as aa,(SELECT @rank:=0) C order by aa.score desc   ");
 		sb.append(" 		) as flpm,user u where u.id_ = flpm.user_id and flpm.user_id = ? order by rank   ");

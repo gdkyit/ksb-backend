@@ -46,6 +46,12 @@ public class ExamService {
 		
 		return exams;
 	}
+	/**
+	 * 用户已答记录
+	 * @param examId
+	 * @param userId
+	 * @return
+	 */
 	public List<UserResult> getUserRs(Integer examId,Integer userId){
 		return this.examDao.getUserRs(examId, userId);
 	}
@@ -138,7 +144,7 @@ public class ExamService {
 				}
 			}
 			double score = 0;
-			Map<String, Object> tktm = this.tkxxDao.getTktmById(item.getTkId());
+			Map<String, Object> tktm = this.examDao.getTmByExam(item);
 			Double tmfz = (Double) tktm.get("TMFZ");
 			Map<String, Double> sjxs = this.tkxxDao.getSjxs();
 			Double xs = 0d;
@@ -156,10 +162,8 @@ public class ExamService {
 					xs = sjxs.get("Sjxs_8min");
 				}
 				score = tmfz * xs;
-			} else {// 答题错误
-				if ("2".equals(examType)) {// 抢答题 扣分
-					score = tmfz * -1;
-				}
+			} else {
+				
 			}
 			UserDetails userDetails = (UserDetails) SecurityContextHolder
 					.getContext().getAuthentication().getPrincipal();

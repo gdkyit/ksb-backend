@@ -2,6 +2,7 @@ package gov.hygs.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,10 +12,12 @@ import org.springframework.stereotype.Repository;
 
 import com.gdky.restful.dao.BaseJdbcDao;
 
+import gov.hygs.entity.ExamItem;
 import gov.hygs.entity.UserResult;
 
 @Repository
-public class ExamDao extends BaseJdbcDao {
+public class ExamDao extends BaseJdbcDao {	
+	
 	/**
 	 * 查询考试
 	 * 
@@ -24,6 +27,7 @@ public class ExamDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getExam(int userId, String type) {
 		StringBuffer sb = new StringBuffer(100);
 		sb.append("  select exam.id_, ");
+		sb.append(" DATE_FORMAT(exam.START_TIME,'%Y-%m-%d')  day,");
 		sb.append(" DATE_FORMAT(exam.START_TIME,'%Y-%m-%d %T')  START_TIME,");
 		sb.append(" DATE_FORMAT(exam.END_TIME,'%Y-%m-%d %T')  END_TIME,");
 		sb.append(" exam.TITLE,");
@@ -55,11 +59,17 @@ public class ExamDao extends BaseJdbcDao {
 	 * @return
 	 */
 	public List<Map<String, Object>> getExamDetailByExamId(Integer examId,Integer userId) {
-		String sql = "select ly.TITLE as lytitle,ly.CONTENT as lycontent ,detail.id_ as detailId, detail.xh,detail.EXAM_ID,tm.ID_,tm.FL_ID,tm.USER_ID,DATE_FORMAT(tm.CREATE_DATE,'%Y-%m-%d %T') CREATE_DATE,tm.SP_DATE,tm.SPR_ID,tm.DEPTID,tm.CONTENT,tm.TMFZ,tm.TMND,tm.TMLY_ID,tm.MODE,tm.YXBZ,tm.XYBZ,tm.DRBZ,tm.KSBZ"
+		String sql = "select ly.TITLE as lytitle,ly.CONTENT as lycontent ,detail.id_ as detailId, detail.xh,detail.EXAM_ID,tm.ID_,tm.FL_ID,tm.USER_ID,DATE_FORMAT(tm.CREATE_DATE,'%Y-%m-%d %T') CREATE_DATE,tm.SP_DATE,tm.SPR_ID,tm.DEPTID,tm.CONTENT,tm.TMND,tm.TMLY_ID,tm.MODE,tm.YXBZ,tm.XYBZ,tm.DRBZ,tm.KSBZ"
 				+ " from exam_detail as detail ,tktm as tm ,tmly as ly where tm.TMLY_ID = ly.ID_ and detail.exam_id = ? and detail.TM_ID = tm.ID_"
 				+ " and detail.id_ not in (select exam_detail_id from exam_user_result where user_id = ?)  order by rand() ";
 		return this.jdbcTemplate.queryForList(sql, new Object[] { examId,userId });
 	}
+	/**
+	 * 用户已答题情况
+	 * @param examId
+	 * @param userId
+	 * @return
+	 */
 	public List<UserResult> getUserRs(Integer examId,Integer userId){
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select eur.*,ed.EXAM_ID,ed.tm_id from exam_user_result eur,exam_detail ed ");
@@ -87,14 +97,13 @@ public class ExamDao extends BaseJdbcDao {
 	}
 	public void insertUserResult(UserResult userRs) {
 		if(checkExamUserResult(userRs.getUserId(), userRs.getExamDetailId())){
-			String sql = "insert into exam_user_result (user_id,EXAM_DETAIL_ID,answer,result,exam_time,exam_score,start_time,end_time,type) values (?,?,?,?,?,?,?,?,?)";
+			String sql = "insert into exam_user_result (user_id,EXAM_DETAIL_ID,answer,result,exam_time,exam_score,start_time,end_time) values (?,?,?,?,?,?,?,?)";
 			this.jdbcTemplate.update(
 					sql,
 					new Object[] { userRs.getUserId(), userRs.getExamDetailId(),
 							userRs.getAnswer(), userRs.getResult(),
 							userRs.getResultTime(), userRs.getResultScore(),
-							userRs.getStartTime(), userRs.getEndTime(),
-							userRs.getType() });
+							userRs.getStartTime(), userRs.getEndTime() });
 		}
 	}
 	public boolean checkExamUserResult(Object userId,Object examDetailId){
@@ -135,16 +144,11 @@ public class ExamDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getScoreGroupByFlId(Integer userId) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select a.*,fl.tkmc from (  ");
-		sb.append("   		select sum(score) as score ,fl_id from (  "); 
-		sb.append("   		select sum(eur.exam_score) as score,tm.fl_id from exam_user_result as eur,exam_detail as ed,exam as e,tktm as tm where eur.EXAM_DETAIL_ID = ed.id_  ");
-		sb.append(" and tm.id_ = ed.tm_id and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   and eur.user_id= ?  group by tm.fl_id ");
-		sb.append("   		union all   ");
 		sb.append("  		select sum(ur.result_score) as score,tm.fl_id from user_result as ur ,tktm as tm where ur.user_id = ? and tm.ID_ = ur.TM_ID group by tm.fl_id  "); 
-		sb.append("   		) as bb group by bb.fl_id   ");
 		sb.append("   		) as a,tkfl as fl   ");
 		sb.append("   		where a.fl_id = fl.id_   ");
 		sb.append("   		order by a.score desc ");
-		return this.jdbcTemplate.queryForList(sb.toString(),new Object[]{userId,userId});
+		return this.jdbcTemplate.queryForList(sb.toString(),new Object[]{userId});
 	}
 	public Map<String,Integer> getSystemProp(){
 		String sql ="select * from system_props where key_ ='jfpms'  ";
@@ -157,33 +161,35 @@ public class ExamDao extends BaseJdbcDao {
 		}
 		return rs;
 	}
+	
 	public List<Map<String, Object>> getScoreRank(Integer groupId) {
 		Integer jfpms = this.getSystemProp().get("jfpms");
 		StringBuffer sb = new StringBuffer();
 		sb.append("  select convert(@rank:=@rank+1,SIGNED) AS rank, ccd.* from (   ");
 		sb.append("  		select a.* ,u.login_name,u.user_name,u.photo from (  ");
-		sb.append("  		select sum(score) as score ,user_id from (  ");
-		sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
-		sb.append("  		union all  ");
+		//sb.append("  		select sum(score) as score ,user_id from (  ");
+		//sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
+		//sb.append("  		union all  ");
 		sb.append("  		select sum(result_score) as score,user_id from user_result   group by user_id  ");
-		sb.append("  		) as bb group by bb.user_id  ");
+	//	sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
 		sb.append("  		where a.user_id = u.id_  and a.user_id in(select user_id from user_group where group_id =?) ");
 		sb.append("  		order by a.score desc  limit "+jfpms+") as ccd,(SELECT @rank:=0) C  ");
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { groupId });
 	}
+	
 	public Map<String, Object> getUserGroupScoreRank(Integer groupId,Integer userId) {
 	 
 		StringBuffer sb = new StringBuffer();
 		sb.append(" select * from (");
 		sb.append("  select convert(@rank:=@rank+1,SIGNED) AS rank, ccd.* from (   ");
 		sb.append("  		select a.* ,u.login_name,u.user_name from (  ");
-		sb.append("  		select sum(score) as score ,user_id from (  ");
-		sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
-		sb.append("  		union all  ");
+	//	sb.append("  		select sum(score) as score ,user_id from (  ");
+	//	sb.append("  		select sum(exam_score) as score,user_id from exam_user_result as eur,exam_detail as ed,exam as e where eur.EXAM_DETAIL_ID = ed.id_ and ed.EXAM_ID = e.ID_ and e.EXAM_TYPE ='2'   group by eur.user_id  ");
+	//	sb.append("  		union all  ");
 		sb.append("  		select sum(result_score) as score,user_id from user_result   group by user_id  ");
-		sb.append("  		) as bb group by bb.user_id  ");
+//		sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
 		sb.append("  		where a.user_id = u.id_  and a.user_id in(select user_id from user_group where group_id =?) ");
 		sb.append("  		order by a.score desc ) as ccd,(SELECT @rank:=0) C  ");
@@ -515,11 +521,11 @@ public class ExamDao extends BaseJdbcDao {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  select convert(@rank:=@rank+1,SIGNED) AS rank, ccd.* from (   ");
 		sb.append("  		select a.* ,u.login_name,u.user_name from (  ");
-		sb.append("  		select sum(score) as score ,user_id from (  ");
+	//	sb.append("  		select sum(score) as score ,user_id from (  ");
 		// sb.append("  		select sum(exam_score) as score,user_id from exam_user_result where   year(end_time) = year(curdate()) and month(END_TIME) = month(curdate()) and week(end_time) = week(curdate())   group by user_id  ");
 		// sb.append("  		union all  ");
 		sb.append("  		select sum(result_score) as score,user_id from user_result   group by user_id  ");
-		sb.append("  		) as bb group by bb.user_id  ");
+	//	sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
 		sb.append("  		where a.user_id = u.id_ and a.user_id in(select user_id from user_group where group_id =?) ");
 		sb.append("  		order by a.score desc) as ccd,(SELECT @rank:=0) C  ");
@@ -537,11 +543,11 @@ public class ExamDao extends BaseJdbcDao {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  select convert(@rank:=@rank+1,SIGNED) AS rank, ccd.* from (   ");
 		sb.append("  		select a.* ,u.login_name,u.user_name from (  ");
-		sb.append("  		select sum(score) as score ,user_id from (  ");
+	//	sb.append("  		select sum(score) as score ,user_id from (  ");
 		// sb.append("  		select sum(exam_score) as score,user_id from exam_user_result where year(end_time) = year(curdate()) and month(END_TIME) = month(curdate()) and week(end_time) = week(curdate())  group by user_id  ");
 		// sb.append("  		union all  ");
 		sb.append("  		select sum(result_score) as score,user_id from user_result  group by user_id  ");
-		sb.append("  		) as bb group by bb.user_id  ");
+	//	sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
 		sb.append("  		where a.user_id = u.id_  ");
 		sb.append("  		order by a.score desc) as ccd,(SELECT @rank:=0) C  ");
@@ -804,7 +810,7 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append(" 	  		) as bb group by bb.user_id      ");
 		sb.append(" 	   		) as a,user as u      ");
 		sb.append(" 	   		where a.user_id = u.id_     "); 
-		sb.append(" 	   		order by a.score desc ,a.time limit "+jfpms+" ) as ccd,(SELECT @rank:=0) C     ");
+		sb.append(" 	   		order by a.score desc ,a.time desc limit "+jfpms+" ) as ccd,(SELECT @rank:=0) C     ");
 		return this.jdbcTemplate.queryForList(sb.toString(),new Object[]{examId});
 	}
 	/**
@@ -822,7 +828,7 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append("  		) as bb group by bb.user_id  ");
 		sb.append("  		) as a,user as u  ");
 		sb.append("  		where a.user_id = u.id_  ");
-		sb.append("  		order by a.score desc ) as ccd,(SELECT @rank:=0) C  ");
+		sb.append("  		order by a.score desc,a.time desc ) as ccd,(SELECT @rank:=0) C  ");
 		sb.append(" ) as userExamRank where userExamRank.user_id = ?   ");
 		List<Map<String,Object>> ls = this.jdbcTemplate.queryForList(sb.toString(),new Object[]{examId,userId});
 		if(ls != null && ls.size() == 1){
@@ -1090,14 +1096,14 @@ public class ExamDao extends BaseJdbcDao {
 	 */
 	public List<Map<String, Object>> getExamRecordList(Integer userId) {
 		StringBuffer sb = new StringBuffer(100);
-		sb.append("  select c.*,e.title from (  ");
+		sb.append("  select c.*,e.title,e.EXAM_TYPE from (  ");
 		sb.append("         select exam_id,sum(score) as score,sum(right1) as rightCount,sum(error1) as errorCount,sum(right1+error1) totalCount    ");
 		sb.append(" 		  from(   ");
 		sb.append(" 		  select exam_score as score,case when result ='Y'  then 1 when result='N' then 0 end as right1, case when result ='Y'  then 0 when result='N' then 1 end as error1, ");
 		sb.append("           ed.EXAM_ID ");
 		sb.append(" 		  from exam_user_result as eur,exam_detail as ed where eur.user_id = ? and eur.EXAM_DETAIL_ID = ed.ID_ ");
 		sb.append(" 		   ) as b group by b.EXAM_ID ) as c,exam as e ");
-		sb.append(" where c.exam_id = e.id_ ");
+		sb.append(" where c.exam_id = e.id_ order by e.START_TIME desc ");
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { userId });
 	}
@@ -1112,9 +1118,37 @@ public class ExamDao extends BaseJdbcDao {
 	public List<Map<String, Object>> getExamRecordDetail(Integer userId,
 			String examId) {
 		StringBuffer sb = new StringBuffer(100);
-		sb.append(" select tm.content,er.answer,er.result,er.EXAM_SCORE as score from exam_user_result as er,tktm as tm,exam_detail ed where er.exam_detail_id = ed.id_ and ed.tm_id = tm.id_  ");
-		sb.append(" and  er.user_id =? and ed.exam_id= ?  ");
-		return this.jdbcTemplate.queryForList(sb.toString(), userId, examId);
+		sb.append(" select ed.ID_ id ,b.XZ_KEY xz,b.CONTENT da,tm.content,er.answer,er.result,er.EXAM_SCORE as score  from exam_user_result as er,tktm as tm,exam_detail ed,tkxzx b,tkda c where er.exam_detail_id = ed.id_ and ed.tm_id = tm.id_  ");
+		sb.append(" and tm.ID_ = c.TK_ID and c.TKXZXID=b.ID_ and  er.user_id =? and ed.exam_id= ?  order by ed.id_,b.XZ_KEY");
+		List<Map<String, Object>> ls = this.jdbcTemplate.queryForList(sb.toString(), userId, examId);
+		List<Map<String, Object>> result = new ArrayList<Map<String, Object>>();
+		Map<String,Object> remap = new HashMap<String,Object>();
+		Integer id = null;
+		String da ="";
+		for(Map<String,Object> map :ls){
+			if(id!=null && id.equals((Integer)map.get("id"))){
+				da+=";"+(String)map.get("xz")+":"+(String)map.get("da");
+			}else if( id!= null && !(id==(Integer)map.get("id"))){
+				remap.put("da",da);
+				result.add(remap);
+				remap = new HashMap<String,Object>();
+				id = (Integer)map.get("id");
+				da = (String)map.get("xz")+":"+(String)map.get("da");
+				remap.put("content", (String)map.get("content"));
+				remap.put("answer", (String)map.get("answer"));
+				remap.put("result", (String)map.get("result"));
+				remap.put("score", (Double)map.get("score"));
+			}else{
+				id = (Integer)map.get("id");
+				da = (String)map.get("xz")+":"+(String)map.get("da");
+				remap.put("content", (String)map.get("content"));
+				remap.put("answer", (String)map.get("answer"));
+				remap.put("result", (String)map.get("result"));
+				remap.put("score", (Double)map.get("score"));
+			}
+			
+		}
+		return result;
 	}
 
 	public List<Map<String, Object>> getUserExam(Integer userId) {
@@ -1140,5 +1174,13 @@ public class ExamDao extends BaseJdbcDao {
 		sb.append("     e.ID_ = b.exam_id  and e.exam_type='1'  order by e.start_time desc");
 		return this.jdbcTemplate.queryForList(sb.toString(),
 				new Object[] { userId });
+	}
+
+	public Map<String, Object> getTmByExam(ExamItem item) {
+		// TODO Auto-generated method stub
+		StringBuffer sql =new StringBuffer("select case when t.TMND='0' then e.jct  else  e.jct end tmfz from exam e,exam_detail d,tktm t where e.ID_=d.EXAM_ID and d.TM_ID=t.ID_");
+		 sql.append(" and d.id_ = ? and d.TM_ID = ? ");
+				
+		return this.jdbcTemplate.queryForMap(sql.toString(), new Object[] { item.getExamDetailId(),item.getTkId() });
 	}
 }

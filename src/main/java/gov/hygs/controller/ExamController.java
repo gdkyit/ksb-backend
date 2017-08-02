@@ -28,8 +28,7 @@ import gov.hygs.service.ZskService;
 @RestController
 @RequestMapping(value = Constants.URI_API_PREFIX)
 public class ExamController {
-	
-
+		
 	@Resource
 	private TkxxService tkxxService;
 	@Resource
