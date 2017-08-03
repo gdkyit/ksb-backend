@@ -30,9 +30,12 @@ public class MessageService {
         }
     }
 
-	public Object signGroup(Map<String, Object> user, String id) {
+	public Object signGroup(Map<String, Object> user, String ids) {
 		// TODO Auto-generated method stub
-		this.messageDao.markMsgRead(user,id);
+		String[] id = ids.split(",");
+		for(String ida :id){
+			this.messageDao.markMsgRead(user,ida);
+		}
 		 return "ok";
 	}
 }

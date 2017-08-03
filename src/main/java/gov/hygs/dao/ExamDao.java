@@ -1148,6 +1148,8 @@ public class ExamDao extends BaseJdbcDao {
 			}
 			
 		}
+		remap.put("da",da);
+		result.add(remap);
 		return result;
 	}
 
