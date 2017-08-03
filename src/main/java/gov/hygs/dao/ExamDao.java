@@ -1178,7 +1178,7 @@ public class ExamDao extends BaseJdbcDao {
 
 	public Map<String, Object> getTmByExam(ExamItem item) {
 		// TODO Auto-generated method stub
-		StringBuffer sql =new StringBuffer("select case when t.TMND='0' then e.jct  else  e.jct end tmfz from exam e,exam_detail d,tktm t where e.ID_=d.EXAM_ID and d.TM_ID=t.ID_");
+		StringBuffer sql =new StringBuffer("select case when t.TMND='0' then e.jct  else  e.jjt end tmfz from exam e,exam_detail d,tktm t where e.ID_=d.EXAM_ID and d.TM_ID=t.ID_");
 		 sql.append(" and d.id_ = ? and d.TM_ID = ? ");
 				
 		return this.jdbcTemplate.queryForMap(sql.toString(), new Object[] { item.getExamDetailId(),item.getTkId() });
