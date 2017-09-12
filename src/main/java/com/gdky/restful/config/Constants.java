@@ -4,9 +4,9 @@ public final class Constants {
 	/**
 	 * prefix of REST API
 	 */
-	public static final String URI_API_PREFIX = "/api";
+	public static final String URI_API_PREFIX = "/kxb-backend/api";
 
-	public static final String URI_PUB_PREFIX = "/pub/api";
+	public static final String URI_PUB_PREFIX = "/kxb-backend/pub/api";
 	
 	public static final String URI_API_VERSION = "1.1";
 
