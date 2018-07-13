@@ -110,6 +110,12 @@ public class PersonalController {
 		return new ResponseEntity<>(ResponseMessage.success("OK"), HttpStatus.OK);
 	}
 
+	/**
+	 * 上传图片
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
 	@ResponseBody
 	@RequestMapping(path = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<?> onSubmit(@RequestParam("file") MultipartFile file) throws IOException {

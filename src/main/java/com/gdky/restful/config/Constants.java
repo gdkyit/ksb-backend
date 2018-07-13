@@ -26,9 +26,9 @@ public final class Constants {
 
 	public static final int HASHID_LEN = 6;
 	
-	//public  static final String UPLOAD_LOCATION="d:/upload/"; //win
+	public  static final String UPLOAD_LOCATION="D:/app/tomcat/app/images/"; //win
 	
-	public  static final String UPLOAD_LOCATION="/usr/local/tomcat/app/images/"; //linux
+	//public  static final String UPLOAD_LOCATION="/usr/local/tomcat/app/images/"; //linux
 	
 	public static final String BARCODE_LOCATION = UPLOAD_LOCATION + "/barcode";
 }
